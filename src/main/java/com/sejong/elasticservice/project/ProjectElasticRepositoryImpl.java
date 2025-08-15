@@ -1,12 +1,8 @@
-package com.sejong.projectservice.infrastructure.project.repository;
+package com.sejong.elasticservice.project;
+
 
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
-import com.sejong.projectservice.core.enums.ProjectStatus;
-import com.sejong.projectservice.core.project.domain.Project;
-import com.sejong.projectservice.infrastructure.kafka.ProjectDocument;
-import com.sejong.projectservice.core.project.repository.ProjectElasticRepository;
-import com.sejong.projectservice.infrastructure.project.entity.ProjectElastic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -26,7 +22,7 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public String save(Project project) {
+    public String save(ProjectDocument project) {
         ProjectElastic projectElastic = ProjectElastic.from(project);
         ProjectElastic savedProjectElastic = repository.save(projectElastic);
         return savedProjectElastic.getId();

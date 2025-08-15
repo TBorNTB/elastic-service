@@ -1,6 +1,6 @@
-package com.sejong.projectservice.infrastructure.project.repository;
+package com.sejong.elasticservice.project;
 
-import com.sejong.projectservice.infrastructure.project.entity.ProjectElastic;
+
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 public interface ProjectElasticDocumentRepository extends ElasticsearchRepository<ProjectElastic,String> {

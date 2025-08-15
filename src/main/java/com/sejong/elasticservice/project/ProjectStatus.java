@@ -1,4 +1,4 @@
-package com.sejong.elasticservice.project.doc;
+package com.sejong.elasticservice.project;
 
 
 public enum ProjectStatus {

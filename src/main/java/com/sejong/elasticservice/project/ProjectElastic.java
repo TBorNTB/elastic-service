@@ -1,16 +1,10 @@
-package com.sejong.projectservice.infrastructure.project.entity;
+package com.sejong.elasticservice.project;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sejong.projectservice.core.category.Category;
-import com.sejong.projectservice.core.collaborator.domain.Collaborator;
-import com.sejong.projectservice.core.enums.ProjectStatus;
-import com.sejong.projectservice.core.project.domain.Project;
-import com.sejong.projectservice.infrastructure.kafka.ProjectDocument;
-import com.sejong.projectservice.core.techstack.TechStack;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,34 +55,19 @@ public class ProjectElastic {
     @Field(type = FieldType.Keyword)
     private List<String> collaborators = new ArrayList<>();
 
-    public static ProjectElastic from(Project project){
-
-        List<String> categoryNames = project.getCategories().stream()
-                .map(Category::getName)
-                .distinct()
-                .toList();
-
-        List<String> techStackNames = project.getTechStacks().stream()
-                .map(TechStack::getName)
-                .distinct()
-                .toList();
-
-        List<String> collaboratorNames = project.getCollaborators().stream()
-                .map(Collaborator::getCollaboratorName)
-                .distinct()
-                .toList();
+    public static ProjectElastic from(ProjectDocument project){
 
         return ProjectElastic.builder()
-                .id(project.getId().toString())
+                .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
                 .thumbnailUrl(project.getThumbnailUrl())
                 .projectStatus(project.getProjectStatus())
-                .createdAt(project.getCreatedAt().toString())
-                .updatedAt(project.getUpdatedAt().toString())
-                .projectCategories(categoryNames)
-                .projectTechStacks(techStackNames)
-                .collaborators(collaboratorNames)
+                .createdAt(project.getCreatedAt())
+                .updatedAt(project.getUpdatedAt())
+                .projectCategories(project.getProjectCategories())
+                .projectTechStacks(project.getProjectTechStacks())
+                .collaborators(project.getCollaborators())
                 .build();
     }
 
