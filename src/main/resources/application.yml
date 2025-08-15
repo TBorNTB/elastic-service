@@ -1,1 +1,95 @@
-spring.application.name=elastic-service
+server:
+  port: 0
+
+spring:
+  application:
+    name: elastic-service
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    consumer:
+      # 메시지의 key 역직렬화 방식 : Kafka에서 받아온 메시지를 String으로 변환
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # 메시지의 value 역직렬화 방식 : Kafka에서 받아온 메시지를 String으로 변환
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+      # 컨슈머 그룹이 미리 안 만들어져있는 경우에, 컨슈머 그룹을 직접 생성해서 메시지를 처음부터 읽음.
+      # 만약 컨슈머 그룹이 이미 만들어져있다면, 해당 컨슈머 그룹이 읽었던 메시지부터 읽음.
+
+      # 이 옵션을 주지 않으면 컨슈머 그룹을 직접 생성해서 메시지를 읽을 때,
+      # 기존에 쌓여있던 메시지를 읽지 않고 컨슈머 그룹이 생성된 이후에 들어온 메시지부터 읽어버린다.
+      # 그럼 컨슈머 그룹이 생성되기 전에 쌓여있던 메시지들이 처리되지 않고 누락돼버린다.
+      auto-offset-reset: earliest
+  thymeleaf:
+    enabled: false
+
+  cloud:
+    discovery:
+      enabled: true
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+  elasticsearch:
+    uris: http://localhost:9200
+    connection-timeout: 5s
+    socket-timeout: 30s
+
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+
+springdoc:
+  api-docs:
+    version: openapi_3_0
+    enabled: true
+    path: /v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_DEFAULTZONE}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      myFeignClient:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+  timelimiter:
+    instances:
+      myFeignClient:
+        timeoutDuration: 3s
+
+logging:
+  level:
+    org.elasticsearch.client: TRACE
+
+app:
+  kafka:
+    topic: project-events
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  kafka:
+    bootstrap-servers: kafka:29092
+  elasticsearch:
+    uris: http://elastic:9200
