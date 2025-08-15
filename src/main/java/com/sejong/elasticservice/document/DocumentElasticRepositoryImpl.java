@@ -1,13 +1,10 @@
-package com.sejong.projectservice.infrastructure.document.repository;
+package com.sejong.elasticservice.document;
+
 
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
-import com.sejong.projectservice.core.document.domain.Document;
-import com.sejong.projectservice.core.document.domain.DocumentDocument;
-import com.sejong.projectservice.core.document.repository.DocumentElasticRepository;
-import com.sejong.projectservice.infrastructure.document.entity.DocumentElastic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -25,12 +22,12 @@ public class DocumentElasticRepositoryImpl implements DocumentElasticRepository 
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public void deleteById(Long documentId) {
-        repository.deleteById(documentId.toString());
+    public void deleteById(String documentId) {
+        repository.deleteById(documentId);
     }
 
     @Override
-    public void save(Document savedDocument) {
+    public void save(DocumentDocument savedDocument) {
         DocumentElastic documentElastic = DocumentElastic.from(savedDocument);
         repository.save(documentElastic);
     }
@@ -79,6 +76,4 @@ public class DocumentElasticRepositoryImpl implements DocumentElasticRepository 
                 .map(DocumentElastic::toDocument)
                 .toList();
     }
-
-
 }

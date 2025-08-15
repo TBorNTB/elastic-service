@@ -1,12 +1,10 @@
-package com.sejong.projectservice.infrastructure.document.entity;
+package com.sejong.elasticservice.document;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sejong.projectservice.core.document.domain.DocumentDocument;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
-
 
 @Getter
 @Setter
@@ -44,30 +42,34 @@ public class DocumentElastic {
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     private String createdAt;
 
-    public static DocumentElastic from(com.sejong.projectservice.core.document.domain.Document document){
-        String fullTime = document.getCreatedAt().toString();
-        String cut = fullTime.length() > 23 ? fullTime.substring(0, 23) : fullTime;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
+    private String updatedAt;
+
+    public static DocumentElastic from(DocumentDocument document){
 
         return DocumentElastic.builder()
-                .id(document.getId().toString())
+                .id(document.getId())
                 .yorkieDocumentId(document.getYorkieDocumentId())
                 .title(document.getTitle())
                 .description(document.getDescription())
                 .thumbnailUrl(document.getThumbnailUrl())
                 .content(document.getContent())
-                .createdAt(cut)
+                .createdAt(document.getCreatedAt())
+                .updatedAt(document.getUpdatedAt())
                 .build();
     }
 
     public DocumentDocument toDocument(){
         return DocumentDocument.builder()
-                .id(Long.valueOf(id))
+                .id(id)
                 .yorkieDocumentId(yorkieDocumentId)
                 .title(title)
                 .content(content)
                 .description(description)
                 .thumbnailUrl(thumbnailUrl)
                 .createdAt(createdAt)
+                .updatedAt(updatedAt)
                 .build();
     }
 }

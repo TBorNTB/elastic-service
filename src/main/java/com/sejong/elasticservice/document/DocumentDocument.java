@@ -1,7 +1,6 @@
-package com.sejong.projectservice.infrastructure.document.kafka;
+package com.sejong.elasticservice.document;
 
-import com.sejong.projectservice.core.document.domain.Document;
-import com.sejong.projectservice.infrastructure.document.entity.DocumentElastic;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,16 +28,4 @@ public class DocumentDocument {
     private String createdAt;
     private String updatedAt;
 
-    public static DocumentDocument from(Document document){
-        return DocumentDocument.builder()
-                .id(document.getId().toString())
-                .yorkieDocumentId(document.getYorkieDocumentId())
-                .title(document.getTitle())
-                .description(document.getDescription())
-                .thumbnailUrl(document.getThumbnailUrl())
-                .content(document.getContent())
-                .createdAt(document.getCreatedAt().truncatedTo(ChronoUnit.MILLIS).format(FORMATTER))
-                .updatedAt(document.getUpdatedAt().truncatedTo(ChronoUnit.MILLIS).format(FORMATTER))
-                .build();
-    }
 }
