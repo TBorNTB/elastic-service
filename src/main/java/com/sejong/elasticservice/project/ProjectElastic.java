@@ -22,10 +22,8 @@ public class ProjectElastic {
     private String id;
 
     @MultiField(
-            mainField = @Field(type = FieldType.Text, analyzer = "projects_title_analyzer" ),
-            otherFields = {
-                    @InnerField(suffix = "auto_complete", type = FieldType.Search_As_You_Type, analyzer = "nori")
-            }
+            mainField = @Field(type = FieldType.Text, analyzer = "projects_title_analyzer"),
+            otherFields = { @InnerField(suffix = "auto_complete", type = FieldType.Search_As_You_Type, analyzer = "nori") }
     )
     private String title;
 
@@ -55,8 +53,16 @@ public class ProjectElastic {
     @Field(type = FieldType.Keyword)
     private List<String> collaborators = new ArrayList<>();
 
-    public static ProjectElastic from(ProjectDocument project){
+    // ✅ 카운터 기본 0
+    @Builder.Default
+    @Field(type = FieldType.Long)
+    private long likeCount = 0L;
 
+    @Builder.Default
+    @Field(type = FieldType.Long)
+    private long viewCount = 0L;
+
+    public static ProjectElastic from(ProjectDocument project){
         return ProjectElastic.builder()
                 .id(project.getId())
                 .title(project.getTitle())
@@ -68,6 +74,8 @@ public class ProjectElastic {
                 .projectCategories(project.getProjectCategories())
                 .projectTechStacks(project.getProjectTechStacks())
                 .collaborators(project.getCollaborators())
+                .likeCount(project.getLikeCount())
+                .viewCount(project.getViewCount())
                 .build();
     }
 
@@ -79,10 +87,12 @@ public class ProjectElastic {
                 .projectStatus(projectStatus)
                 .thumbnailUrl(thumbnailUrl)
                 .createdAt(createdAt)
-                .updatedAt(createdAt)
+                .updatedAt(updatedAt)                 // (기존 createdAt -> updatedAt으로 수정 권장)
                 .projectCategories(projectCategories)
                 .projectTechStacks(projectTechStacks)
                 .collaborators(collaborators)
+                .likeCount(likeCount)
+                .viewCount(viewCount)
                 .build();
     }
 }

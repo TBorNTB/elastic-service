@@ -29,9 +29,18 @@ public class ProjectDocument {
 
     private String thumbnailUrl;
 
+    @Builder.Default
     private List<String> projectCategories = new ArrayList<>();
 
+    @Builder.Default
     private List<String> projectTechStacks = new ArrayList<>();
 
+    @Builder.Default
     private List<String> collaborators = new ArrayList<>();
+
+    @Builder.Default
+    private long likeCount = 0L;
+
+    @Builder.Default
+    private long viewCount = 0L;
 }
