@@ -11,4 +11,6 @@ public interface ProjectElasticRepository {
 
     List<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page);
 
+    void update(Long postId, Long likeCount);
+
 }

@@ -9,6 +9,9 @@ import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.document.Document;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -111,5 +114,18 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
                  .map(SearchHit::getContent)
                  .map(ProjectElastic::toDocument)
                  .toList();
+    }
+
+    @Override
+    public void update(Long postId, Long likeCount) {
+        Document patch = Document.create();
+        patch.put("likeCount",likeCount);
+
+        UpdateQuery uq = UpdateQuery.builder(postId.toString())
+                .withDocument(patch)
+                .build();
+
+        IndexCoordinates index = elasticsearchOperations.getIndexCoordinatesFor(ProjectElastic.class);
+        elasticsearchOperations.update(uq, index);
     }
 }
