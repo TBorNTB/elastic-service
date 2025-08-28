@@ -117,9 +117,22 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
     }
 
     @Override
-    public void update(Long postId, Long likeCount) {
+    public void updateLikeCount(Long postId, Long likeCount) {
         Document patch = Document.create();
         patch.put("likeCount",likeCount);
+
+        UpdateQuery uq = UpdateQuery.builder(postId.toString())
+                .withDocument(patch)
+                .build();
+
+        IndexCoordinates index = elasticsearchOperations.getIndexCoordinatesFor(ProjectElastic.class);
+        elasticsearchOperations.update(uq, index);
+    }
+
+    @Override
+    public void updateViewCount(Long postId, Long viewCount) {
+        Document patch = Document.create();
+        patch.put("viewCount",viewCount);
 
         UpdateQuery uq = UpdateQuery.builder(postId.toString())
                 .withDocument(patch)
