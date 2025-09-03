@@ -15,8 +15,6 @@ import java.util.List;
 @Builder
 public class ProjectDocument {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
     private String id;
 
     private String title;

@@ -1,6 +1,7 @@
 package com.sejong.elasticservice.document;
 
-import com.sejong.elasticservice.TopicNames;
+import com.sejong.elasticservice.common.name.GroupNames;
+import com.sejong.elasticservice.common.name.TopicNames;
 import com.sejong.elasticservice.project.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,7 +14,7 @@ public class DocumentIndexConsumer {
 
     @KafkaListener(
             topics = TopicNames.DOCUMENT,
-            groupId = "document-group"
+            groupId = GroupNames.DOCUMENT
     )
     public void consume(String message) {
 

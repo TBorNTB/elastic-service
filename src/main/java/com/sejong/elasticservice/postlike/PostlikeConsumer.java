@@ -1,6 +1,7 @@
 package com.sejong.elasticservice.postlike;
 
-import com.sejong.elasticservice.TopicNames;
+import com.sejong.elasticservice.common.name.GroupNames;
+import com.sejong.elasticservice.common.name.TopicNames;
 import com.sejong.elasticservice.project.ProjectElasticRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,7 +14,7 @@ public class PostlikeConsumer {
 
     @KafkaListener(
             topics = TopicNames.POSTLIKE,
-            groupId = "like-group"
+            groupId = GroupNames.LIKE
     )
     public void consume(String message) {
 

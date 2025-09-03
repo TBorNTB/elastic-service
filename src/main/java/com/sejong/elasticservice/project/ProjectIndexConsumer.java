@@ -1,7 +1,8 @@
 package com.sejong.elasticservice.project;
 
 
-import com.sejong.elasticservice.TopicNames;
+import com.sejong.elasticservice.common.name.GroupNames;
+import com.sejong.elasticservice.common.name.TopicNames;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ public class ProjectIndexConsumer {
 
     @KafkaListener(
             topics = TopicNames.PROJECT,
-            groupId = "project-group"
+            groupId = GroupNames.PROJECT
     )
     public void consume(String message) {
 

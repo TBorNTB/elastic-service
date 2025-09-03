@@ -15,8 +15,6 @@ import java.time.temporal.ChronoUnit;
 @Builder
 public class DocumentDocument {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
     private String id;
     private String yorkieDocumentId;
 

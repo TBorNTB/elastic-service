@@ -1,4 +1,4 @@
-package com.sejong.elasticservice;
+package com.sejong.elasticservice.common.name;
 
 public final class TopicNames {
     private TopicNames() {}

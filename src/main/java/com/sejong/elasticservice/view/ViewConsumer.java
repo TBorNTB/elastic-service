@@ -1,6 +1,7 @@
 package com.sejong.elasticservice.view;
 
-import com.sejong.elasticservice.TopicNames;
+import com.sejong.elasticservice.common.name.GroupNames;
+import com.sejong.elasticservice.common.name.TopicNames;
 import com.sejong.elasticservice.postlike.PostType;
 import com.sejong.elasticservice.project.ProjectElasticRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ public class ViewConsumer {
 
     @KafkaListener(
             topics = TopicNames.VIEW,
-            groupId = "view-group"
+            groupId = GroupNames.VIEW
     )
     public void consume(String message) {
 
