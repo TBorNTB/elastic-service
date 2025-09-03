@@ -20,7 +20,7 @@ public class DocumentIndexConsumer {
 
         DocumentIndexEvent event = DocumentIndexEvent.fromJson(message);
 
-        if (event.getType()== Type.CREATED||event.getType()==Type.UPDATED) repository.save(event.getDocumentDocument());
+        if (event.getType()== Type.CREATED||event.getType()==Type.UPDATED) repository.save(event.getDocumentEvent());
         if (event.getType()==Type.DELETED) repository.deleteById(event.getAggregatedId());
     }
 }

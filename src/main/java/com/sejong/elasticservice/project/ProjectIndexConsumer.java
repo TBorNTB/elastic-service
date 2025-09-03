@@ -20,7 +20,7 @@ public class ProjectIndexConsumer {
 
         ProjectIndexEvent event = ProjectIndexEvent.fromJson(message);
 
-        if (event.getType()== Type.CREATED||event.getType()==Type.UPDATED) repo.save(event.getProjectDocument());
+        if (event.getType()== Type.CREATED||event.getType()==Type.UPDATED) repo.save(event.getProjectEvent());
         if (event.getType()==Type.DELETED) repo.deleteById(event.getAggregatedId());
     }
 }

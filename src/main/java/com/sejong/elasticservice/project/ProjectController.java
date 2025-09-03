@@ -30,7 +30,7 @@ public class ProjectController {
     //todo 정렬 및 desc asc 지원되게 해야됨
     @GetMapping("/search")
     @Operation(summary = "elastic 내용물 전체 조회 => 현재 정렬 방식은 지원 안함")
-    public ResponseEntity<List<ProjectDocument>> searchProjects(
+    public ResponseEntity<List<ProjectEvent>> searchProjects(
             @RequestParam String query,
             @RequestParam ProjectStatus projectStatus,
             @RequestParam(defaultValue ="") List<String> categories,
@@ -40,7 +40,7 @@ public class ProjectController {
 
     ) {
 
-        List<ProjectDocument> response = projectService.searchProjects(
+        List<ProjectEvent> response = projectService.searchProjects(
                 query, projectStatus, categories, techStacks, size,page
         );
         return ResponseEntity.ok(response);

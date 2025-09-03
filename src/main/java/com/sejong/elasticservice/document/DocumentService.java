@@ -15,7 +15,7 @@ public class DocumentService {
         return documentElasticRepository.getSuggestions(query);
     }
 
-    public List<DocumentDocument> searchDocuments(String query, int size, int page) {
+    public List<DocumentEvent> searchDocuments(String query, int size, int page) {
         return documentElasticRepository.searchDocuments(query,size,page);
     }
 

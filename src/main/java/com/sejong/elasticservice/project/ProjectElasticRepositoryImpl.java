@@ -25,10 +25,10 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public String save(ProjectDocument project) {
-        ProjectElastic projectElastic = ProjectElastic.from(project);
-        ProjectElastic savedProjectElastic = repository.save(projectElastic);
-        return savedProjectElastic.getId();
+    public String save(ProjectEvent project) {
+        ProjectDocument projectDocument = ProjectDocument.from(project);
+        ProjectDocument savedProjectDocument = repository.save(projectDocument);
+        return savedProjectDocument.getId();
     }
 
     @Override
@@ -49,17 +49,17 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
                 .withPageable(PageRequest.of(0, 5))
                 .build();
 
-        SearchHits<ProjectElastic> searchHits = elasticsearchOperations.search(nativeQuery, ProjectElastic.class);
+        SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(nativeQuery, ProjectDocument.class);
         return searchHits.getSearchHits().stream()
                 .map(hit -> {
-                    ProjectElastic projectElastic = hit.getContent();
-                    return projectElastic.getTitle();
+                    ProjectDocument projectDocument = hit.getContent();
+                    return projectDocument.getTitle();
                 })
                 .toList();
     }
 
     @Override
-    public List<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page) {
+    public List<ProjectEvent> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page) {
 
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(query)
@@ -105,14 +105,14 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
                 .withPageable(PageRequest.of(page, size))
                 .build();
 
-        SearchHits<ProjectElastic> searchHits = elasticsearchOperations.search(
+        SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(
                 nativeQuery,
-                ProjectElastic.class
+                ProjectDocument.class
         );
 
          return searchHits.stream()
                  .map(SearchHit::getContent)
-                 .map(ProjectElastic::toDocument)
+                 .map(ProjectDocument::toDocument)
                  .toList();
     }
 
@@ -125,7 +125,7 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
                 .withDocument(patch)
                 .build();
 
-        IndexCoordinates index = elasticsearchOperations.getIndexCoordinatesFor(ProjectElastic.class);
+        IndexCoordinates index = elasticsearchOperations.getIndexCoordinatesFor(ProjectDocument.class);
         elasticsearchOperations.update(uq, index);
     }
 
@@ -138,7 +138,7 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
                 .withDocument(patch)
                 .build();
 
-        IndexCoordinates index = elasticsearchOperations.getIndexCoordinatesFor(ProjectElastic.class);
+        IndexCoordinates index = elasticsearchOperations.getIndexCoordinatesFor(ProjectDocument.class);
         elasticsearchOperations.update(uq, index);
     }
 }

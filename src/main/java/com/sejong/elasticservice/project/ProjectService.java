@@ -15,7 +15,7 @@ public class ProjectService {
         return projectElasticRepository.getSuggestions(query);
     }
 
-    public List<ProjectDocument> searchProjects(
+    public List<ProjectEvent> searchProjects(
             String query,
             ProjectStatus projectStatus,
             List<String> categories,
@@ -23,10 +23,10 @@ public class ProjectService {
             int size,
             int page
     ) {
-        List<ProjectDocument> projectDocuments = projectElasticRepository.searchProjects(
+        List<ProjectEvent> projectEvents = projectElasticRepository.searchProjects(
                 query, projectStatus, categories, techStacks, size,page
         );
 
-        return projectDocuments;
+        return projectEvents;
     }
 }

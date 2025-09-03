@@ -16,7 +16,7 @@ public class ProjectIndexEvent {
     private String aggregatedId;
     private Type type;
     private long occurredAt;
-    private ProjectDocument projectDocument;
+    private ProjectEvent projectEvent;
 
     public static ProjectIndexEvent fromJson(String message) {
         try {

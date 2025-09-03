@@ -27,9 +27,9 @@ public class DocumentElasticRepositoryImpl implements DocumentElasticRepository 
     }
 
     @Override
-    public void save(DocumentDocument savedDocument) {
-        DocumentElastic documentElastic = DocumentElastic.from(savedDocument);
-        repository.save(documentElastic);
+    public void save(DocumentEvent savedDocument) {
+        DocumentDocument documentDocument = DocumentDocument.from(savedDocument);
+        repository.save(documentDocument);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DocumentElasticRepositoryImpl implements DocumentElasticRepository 
                 .withPageable(PageRequest.of(0, 5))
                 .build();
 
-        SearchHits<DocumentElastic> searchHits = elasticsearchOperations.search(nativeQuery, DocumentElastic.class);
+        SearchHits<DocumentDocument> searchHits = elasticsearchOperations.search(nativeQuery, DocumentDocument.class);
 
         return searchHits.getSearchHits().stream()
                 .map(hit -> hit.getContent().getTitle())
@@ -53,7 +53,7 @@ public class DocumentElasticRepositoryImpl implements DocumentElasticRepository 
     }
 
     @Override
-    public List<DocumentDocument> searchDocuments(String query, int size, int page) {
+    public List<DocumentEvent> searchDocuments(String query, int size, int page) {
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(query)
                 .fields("title^3", "description^2", "content")
@@ -69,11 +69,11 @@ public class DocumentElasticRepositoryImpl implements DocumentElasticRepository 
                 .withPageable(PageRequest.of(page, size))
                 .build();
 
-        SearchHits<DocumentElastic> searchHits = elasticsearchOperations.search(nativeQuery, DocumentElastic.class);
+        SearchHits<DocumentDocument> searchHits = elasticsearchOperations.search(nativeQuery, DocumentDocument.class);
 
         return searchHits.stream()
                 .map(SearchHit::getContent)
-                .map(DocumentElastic::toDocument)
+                .map(DocumentDocument::toDocument)
                 .toList();
     }
 }
