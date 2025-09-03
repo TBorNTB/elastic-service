@@ -1,7 +1,6 @@
 package com.sejong.elasticservice.view;
 
 import com.sejong.elasticservice.TopicNames;
-import com.sejong.elasticservice.postlike.PostLikeEvent;
 import com.sejong.elasticservice.postlike.PostType;
 import com.sejong.elasticservice.project.ProjectElasticRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,7 @@ public class ViewConsumer {
     private final ProjectElasticRepository projectElasticRepository;
 
     @KafkaListener(
-            topics = TopicNames.VIEW_EVENTS,
+            topics = TopicNames.VIEW,
             groupId = "view-group"
     )
     public void consume(String message) {

@@ -12,7 +12,7 @@ public class PostlikeConsumer {
     private final ProjectElasticRepository projectElasticRepository;
 
     @KafkaListener(
-            topics = TopicNames.POSTLIKE_EVENTS,
+            topics = TopicNames.POSTLIKE,
             groupId = "like-group"
     )
     public void consume(String message) {

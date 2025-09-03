@@ -12,7 +12,7 @@ public class ProjectIndexConsumer {
     private final ProjectElasticRepository repo;
 
     @KafkaListener(
-            topics = TopicNames.PROJECT_EVENTS,
+            topics = TopicNames.PROJECT,
             groupId = "project-group"
     )
     public void consume(String message) {

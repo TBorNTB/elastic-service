@@ -1,7 +1,6 @@
 package com.sejong.elasticservice.document;
 
 import com.sejong.elasticservice.TopicNames;
-import com.sejong.elasticservice.project.ProjectIndexEvent;
 import com.sejong.elasticservice.project.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,7 +12,7 @@ public class DocumentIndexConsumer {
     private final DocumentElasticRepository repository;
 
     @KafkaListener(
-            topics = TopicNames.DOCUMENT_EVENTS,
+            topics = TopicNames.DOCUMENT,
             groupId = "document-group"
     )
     public void consume(String message) {
