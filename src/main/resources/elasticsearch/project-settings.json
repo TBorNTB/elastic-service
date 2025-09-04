@@ -1,0 +1,27 @@
+{
+  "analysis" :{
+    "filter" : {
+      "project_synonyms" :{
+        "type" : "synonym",
+        "synonyms" : [
+          "Hacking, 해킹"
+        ]
+      }
+    },
+    "analyzer" :{
+      "projects_title_analyzer" : {
+        "char_filter" : [],
+        "tokenizer":    "nori_tokenizer",
+        "filter" : ["nori_part_of_speech",
+          "nori_readingform","lowercase","project_synonyms"]
+      },
+      "projects_description_analyzer":{
+        "char_filter" :["html_strip"],
+        "tokenizer" : "nori_tokenizer",
+        "filter" : ["nori_part_of_speech",
+          "nori_readingform",
+          "lowercase"]
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+package com.sejong.elasticservice.document;
+
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.*;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(indexName = "documents")
+@Setting(settingPath = "/elasticsearch/document-settings.json")
+public class DocumentDocument {
+
+    @Id
+    private String id;
+
+    @Field(type = FieldType.Keyword)
+    private String yorkieDocumentId;
+
+    @MultiField(
+            mainField = @Field(type = FieldType.Text, analyzer = "documents_title_analyzer" ),
+            otherFields = {
+                    @InnerField(suffix = "auto_complete", type = FieldType.Search_As_You_Type, analyzer = "nori")
+            }
+    )
+    private String title;
+
+    @Field(type = FieldType.Text , analyzer = "documents_description_analyzer")
+    private String description;
+
+    @Field(type = FieldType.Keyword)
+    private String thumbnailUrl;
+
+    @Field(type = FieldType.Text , analyzer = "documents_content_analyzer")
+    private String content;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
+    private String createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
+    private String updatedAt;
+
+    public static DocumentDocument from(DocumentEvent document){
+
+        return DocumentDocument.builder()
+                .id(document.getId())
+                .yorkieDocumentId(document.getYorkieDocumentId())
+                .title(document.getTitle())
+                .description(document.getDescription())
+                .thumbnailUrl(document.getThumbnailUrl())
+                .content(document.getContent())
+                .createdAt(document.getCreatedAt())
+                .updatedAt(document.getUpdatedAt())
+                .build();
+    }
+
+    public DocumentEvent toDocument(){
+        return DocumentEvent.builder()
+                .id(id)
+                .yorkieDocumentId(yorkieDocumentId)
+                .title(title)
+                .content(content)
+                .description(description)
+                .thumbnailUrl(thumbnailUrl)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
+                .build();
+    }
+}
