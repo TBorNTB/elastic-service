@@ -19,5 +19,5 @@ public final class TopicNames {
     public static final String NEWS = "news";
     
     // CS 지식 이벤트
-    public static final String CSKNOWLEDGE = "csknowledge";
+    public static final String CSKNOWLEDGE = "cs-knowledge";
 }
