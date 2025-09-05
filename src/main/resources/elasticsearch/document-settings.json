@@ -37,7 +37,7 @@
         "tokenizer": "nori_tokenizer",
         "filter": [
           "nori_part_of_speech",
-          "nori_readingfrom",
+          "nori_readingform",
           "lowercase"
         ]
       }
