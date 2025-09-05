@@ -1,5 +1,7 @@
-package com.sejong.elasticservice.document;
+package com.sejong.elasticservice.document.service;
 
+import com.sejong.elasticservice.document.domain.DocumentEvent;
+import com.sejong.elasticservice.document.repository.DocumentElasticRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
