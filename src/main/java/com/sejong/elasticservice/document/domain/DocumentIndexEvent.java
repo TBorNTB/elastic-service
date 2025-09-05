@@ -3,7 +3,7 @@ package com.sejong.elasticservice.document.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sejong.elasticservice.project.Type;
+import com.sejong.elasticservice.common.constants.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
