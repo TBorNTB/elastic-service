@@ -1,9 +1,10 @@
-package com.sejong.elasticservice.view;
+package com.sejong.elasticservice.view.consumer;
 
-import com.sejong.elasticservice.common.name.GroupNames;
-import com.sejong.elasticservice.common.name.TopicNames;
+import com.sejong.elasticservice.common.constants.GroupNames;
+import com.sejong.elasticservice.common.constants.TopicNames;
 import com.sejong.elasticservice.postlike.PostType;
-import com.sejong.elasticservice.project.ProjectElasticRepository;
+import com.sejong.elasticservice.project.repository.ProjectElasticRepository;
+import com.sejong.elasticservice.view.domain.ViewEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

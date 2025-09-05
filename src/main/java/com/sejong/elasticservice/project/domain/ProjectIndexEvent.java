@@ -1,8 +1,9 @@
-package com.sejong.elasticservice.project;
+package com.sejong.elasticservice.project.domain;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sejong.elasticservice.project.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

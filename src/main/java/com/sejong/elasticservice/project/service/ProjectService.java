@@ -1,5 +1,8 @@
-package com.sejong.elasticservice.project;
+package com.sejong.elasticservice.project.service;
 
+import com.sejong.elasticservice.project.domain.ProjectEvent;
+import com.sejong.elasticservice.project.domain.ProjectStatus;
+import com.sejong.elasticservice.project.repository.ProjectElasticRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

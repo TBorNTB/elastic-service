@@ -1,7 +1,7 @@
 package com.sejong.elasticservice.document.consumer;
 
-import com.sejong.elasticservice.common.name.GroupNames;
-import com.sejong.elasticservice.common.name.TopicNames;
+import com.sejong.elasticservice.common.constants.GroupNames;
+import com.sejong.elasticservice.common.constants.TopicNames;
 import com.sejong.elasticservice.document.domain.DocumentIndexEvent;
 import com.sejong.elasticservice.document.repository.DocumentElasticRepository;
 import com.sejong.elasticservice.project.Type;

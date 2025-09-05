@@ -1,8 +1,8 @@
 package com.sejong.elasticservice.project.controller;
 
-import com.sejong.elasticservice.project.ProjectEvent;
-import com.sejong.elasticservice.project.ProjectService;
-import com.sejong.elasticservice.project.ProjectStatus;
+import com.sejong.elasticservice.project.domain.ProjectEvent;
+import com.sejong.elasticservice.project.service.ProjectService;
+import com.sejong.elasticservice.project.domain.ProjectStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

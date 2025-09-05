@@ -1,4 +1,4 @@
-package com.sejong.elasticservice.project;
+package com.sejong.elasticservice.project.domain;
 
 
 public enum ProjectStatus {

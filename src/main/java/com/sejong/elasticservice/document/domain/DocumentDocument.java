@@ -2,7 +2,6 @@ package com.sejong.elasticservice.document.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sejong.elasticservice.document.DocumentEvent;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;

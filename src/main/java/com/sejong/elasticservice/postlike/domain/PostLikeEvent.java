@@ -1,4 +1,4 @@
-package com.sejong.elasticservice.view;
+package com.sejong.elasticservice.postlike.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,15 +13,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ViewEvent {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class PostLikeEvent {
     private Long postId;
     private PostType postType;
-    private Long viewCount;
+    private Long likeCount;
 
-    public static ViewEvent fromJson(String message) {
+    public static PostLikeEvent fromJson(String message) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(message, ViewEvent.class);
+            return objectMapper.readValue(message, PostLikeEvent.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("JSON 파싱 실패");
         }

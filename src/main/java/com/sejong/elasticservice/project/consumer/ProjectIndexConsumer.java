@@ -1,9 +1,9 @@
 package com.sejong.elasticservice.project.consumer;
 
 
-import com.sejong.elasticservice.common.name.GroupNames;
-import com.sejong.elasticservice.common.name.TopicNames;
-import com.sejong.elasticservice.project.ProjectIndexEvent;
+import com.sejong.elasticservice.common.constants.GroupNames;
+import com.sejong.elasticservice.common.constants.TopicNames;
+import com.sejong.elasticservice.project.domain.ProjectIndexEvent;
 import com.sejong.elasticservice.project.Type;
 import com.sejong.elasticservice.project.repository.ProjectElasticRepository;
 import lombok.RequiredArgsConstructor;

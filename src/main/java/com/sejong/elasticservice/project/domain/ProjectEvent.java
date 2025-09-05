@@ -1,5 +1,6 @@
-package com.sejong.elasticservice.project;
+package com.sejong.elasticservice.project.domain;
 
+import com.sejong.elasticservice.project.domain.ProjectStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
