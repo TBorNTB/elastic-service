@@ -1,5 +1,7 @@
-package com.sejong.elasticservice.project;
+package com.sejong.elasticservice.project.repository;
 
+import com.sejong.elasticservice.project.ProjectEvent;
+import com.sejong.elasticservice.project.ProjectStatus;
 import java.util.List;
 
 public interface ProjectElasticRepository {

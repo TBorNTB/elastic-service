@@ -1,8 +1,11 @@
-package com.sejong.elasticservice.project;
+package com.sejong.elasticservice.project.repository;
 
 
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
+import com.sejong.elasticservice.project.ProjectEvent;
+import com.sejong.elasticservice.project.ProjectStatus;
+import com.sejong.elasticservice.project.domain.ProjectDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;

@@ -1,7 +1,9 @@
-package com.sejong.elasticservice.project;
+package com.sejong.elasticservice.project.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sejong.elasticservice.project.ProjectEvent;
+import com.sejong.elasticservice.project.ProjectStatus;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
