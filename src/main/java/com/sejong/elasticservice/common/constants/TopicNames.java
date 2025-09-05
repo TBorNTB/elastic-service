@@ -14,4 +14,10 @@ public final class TopicNames {
 
     // 조회수 이벤트
     public static final String VIEW = "view";
+    
+    // 뉴스 이벤트
+    public static final String NEWS = "news";
+    
+    // CS 지식 이벤트
+    public static final String CSKNOWLEDGE = "csknowledge";
 }
