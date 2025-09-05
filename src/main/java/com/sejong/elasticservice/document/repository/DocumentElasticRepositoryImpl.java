@@ -1,10 +1,12 @@
-package com.sejong.elasticservice.document;
+package com.sejong.elasticservice.document.repository;
 
 
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
+import com.sejong.elasticservice.document.domain.DocumentDocument;
+import com.sejong.elasticservice.document.domain.DocumentEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;

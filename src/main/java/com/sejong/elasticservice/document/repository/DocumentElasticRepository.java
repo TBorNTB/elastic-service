@@ -1,6 +1,7 @@
-package com.sejong.elasticservice.document;
+package com.sejong.elasticservice.document.repository;
 
 
+import com.sejong.elasticservice.document.domain.DocumentEvent;
 import java.util.List;
 
 public interface DocumentElasticRepository {

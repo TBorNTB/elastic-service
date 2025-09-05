@@ -1,5 +1,7 @@
-package com.sejong.elasticservice.document;
+package com.sejong.elasticservice.document.controller;
 
+import com.sejong.elasticservice.document.DocumentEvent;
+import com.sejong.elasticservice.document.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

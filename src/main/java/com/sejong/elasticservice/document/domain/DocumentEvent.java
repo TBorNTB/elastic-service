@@ -1,4 +1,4 @@
-package com.sejong.elasticservice.document;
+package com.sejong.elasticservice.document.domain;
 
 
 import lombok.AllArgsConstructor;
