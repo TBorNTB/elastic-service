@@ -1,0 +1,71 @@
+{
+  "analysis": {
+    "filter": {
+      "news_synonyms": {
+        "type": "synonym",
+        "synonyms": [
+          "news, 뉴스, 소식",
+          "MT, 엠티, 멤버십트레이닝",
+          "OT, 오티, 오리엔테이션",
+          "study, 스터디",
+          "seminar, 세미나",
+          "연합세미나, 연세, united seminar",
+          "conference, 컨퍼런스, 콘퍼런스",
+          "CTF, Capture The Flag, 씨티에프",
+          "해킹, hacking, 해킹대회",
+          "보안, security, 시큐리티, 정보보안, infosec",
+          "웹해킹, web hacking, 웹보안",
+          "리버싱, reversing, 역공학, reverse engineering",
+          "포렌식, forensics, forensic, 디지털포렌식",
+          "암호학, cryptography, crypto, 크립토",
+          "취약점, vulnerability, vuln, 버그",
+          "익스플로잇, exploit, 익스, exp",
+          "페이로드, payload",
+          "워게임, wargame, 워게",
+          "버그바운티, bug bounty",
+          "펜테스팅, pentest, penetration testing, 모의해킹",
+          "OSINT, 오신트, Open Source Intelligence",
+          "블록체인, blockchain, 블체",
+          "AI보안, AI security, 인공지능보안",
+          "클라우드보안, cloud security",
+          "모바일보안, mobile security",
+          "IoT보안, IoT security, 사물인터넷보안"
+        ]
+      }
+    },
+    "analyzer": {
+      "news_title_analyzer": {
+        "char_filter": [],
+        "tokenizer": "nori_tokenizer",
+        "filter": [
+          "nori_part_of_speech",
+          "nori_readingform",
+          "lowercase",
+          "news_synonyms"
+        ]
+      },
+      "news_description_analyzer": {
+        "char_filter": [
+          "html_strip"
+        ],
+        "tokenizer": "nori_tokenizer",
+        "filter": [
+          "nori_part_of_speech",
+          "nori_readingform",
+          "lowercase"
+        ]
+      },
+      "news_content_analyzer" :{
+        "char_filter" :[
+          "html_strip"
+        ],
+        "tokenizer": "nori_tokenizer",
+        "filter": [
+          "nori_part_of_speech",
+          "nori_readingform",
+          "lowercase"
+        ]
+      }
+    }
+  }
+}
