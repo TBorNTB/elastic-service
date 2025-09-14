@@ -2,7 +2,7 @@ package com.sejong.elasticservice.project.service;
 
 import com.sejong.elasticservice.project.domain.ProjectEvent;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
-import com.sejong.elasticservice.project.repository.ProjectElasticRepository;
+import com.sejong.elasticservice.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectService {
 
-    private final ProjectElasticRepository projectElasticRepository;
+    private final ProjectRepository projectElasticRepository;
 
     public List<String> getSuggestions(String query) {
         return projectElasticRepository.getSuggestions(query);

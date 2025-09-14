@@ -6,6 +6,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.project.domain.ProjectEvent;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import com.sejong.elasticservice.project.domain.ProjectDocument;
+import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
+public class ProjectRepositoryImpl implements ProjectRepository {
 
     private final ProjectElasticDocumentRepository repository;
     private final ElasticsearchOperations elasticsearchOperations;
@@ -62,7 +63,7 @@ public class ProjectElasticRepositoryImpl implements ProjectElasticRepository {
     }
 
     @Override
-    public List<ProjectEvent> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page) {
+    public List<ProjectSearchDto> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page) {
 
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(query)
