@@ -116,7 +116,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
          return searchHits.stream()
                  .map(SearchHit::getContent)
-                 .map(ProjectDocument::toDocument)
+                 .map(ProjectSearchDto::toProjectSearchDto)
                  .toList();
     }
 
