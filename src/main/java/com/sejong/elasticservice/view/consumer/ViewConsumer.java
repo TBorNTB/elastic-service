@@ -6,7 +6,7 @@ import com.sejong.elasticservice.postlike.PostType;
 import com.sejong.elasticservice.project.repository.ProjectRepository;
 import com.sejong.elasticservice.csknowledge.repository.CsKnowledgeRepository;
 import com.sejong.elasticservice.news.repository.NewsRepository;
-import com.sejong.elasticservice.document.repository.DocumentElasticRepository;
+import com.sejong.elasticservice.document.repository.DocumentRepository;
 import com.sejong.elasticservice.view.domain.ViewEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,7 +18,7 @@ public class ViewConsumer {
     private final ProjectRepository projectElasticRepository;
     private final NewsRepository newsRepository;
     private final CsKnowledgeRepository csKnowledgeRepository;
-    private final DocumentElasticRepository documentElasticRepository;
+    private final DocumentRepository documentRepository;
 
     @KafkaListener(
             topics = TopicNames.VIEW,

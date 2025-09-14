@@ -1,6 +1,6 @@
 package com.sejong.elasticservice.document.controller;
 
-import com.sejong.elasticservice.document.domain.DocumentEvent;
+import com.sejong.elasticservice.document.dto.DocumentSearchDto;
 import com.sejong.elasticservice.document.service.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -30,15 +30,13 @@ public class DocumentController {
 
     @GetMapping("/search")
     @Operation(summary = "Document관련 elastic 내용물 전체 조회 => 현재 정렬 방식은 지원 안함")
-    public ResponseEntity<List<DocumentEvent>> searchDocuments(
+    public ResponseEntity<List<DocumentSearchDto>> searchDocuments(
             @RequestParam String query,
-            @RequestParam(defaultValue ="5") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "0") int page
-
     ) {
-
-        List<DocumentEvent> response = documentService.searchDocuments(
-                query, size,page
+        List<DocumentSearchDto> response = documentService.searchDocuments(
+                query, size, page
         );
         return ResponseEntity.ok(response);
     }
