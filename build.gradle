@@ -37,8 +37,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    //elastic
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    // elastic
+    implementation 'org.springframework.data:spring-data-elasticsearch'
+    implementation 'co.elastic.clients:elasticsearch-java:8.13.4' // Elasticsearch Java Client
 
     //kafka
     implementation 'org.springframework.kafka:spring-kafka'
