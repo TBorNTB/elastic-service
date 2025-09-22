@@ -10,6 +10,7 @@ import com.sejong.elasticservice.project.domain.ProjectDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -68,16 +69,16 @@ public class PopularContentService {
 
             NativeQuery searchQuery = NativeQuery.builder()
                     .withQuery(rangeQuery)
-                    .withPageable(PageRequest.of(0, 100))
+                    .withSort(Sort.by(
+                            Sort.Order.desc("likeCount"),
+                            Sort.Order.desc("viewCount")
+                    ))
                     .build();
 
             SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(searchQuery, ProjectDocument.class);
 
-            // 인기도 점수 기준으로 정렬하여 상위 1개만 반환
             return searchHits.stream()
                     .map(SearchHit::getContent)
-                    .sorted(Comparator.comparingDouble((ProjectDocument doc) -> doc.getLikeCount() * 2.0 + doc.getViewCount()).reversed())
-                    .limit(1)
                     .toList();
         } catch (Exception e) {
             log.error("Error searching weekly projects", e);
@@ -94,16 +95,17 @@ public class PopularContentService {
 
             NativeQuery searchQuery = NativeQuery.builder()
                     .withQuery(rangeQuery)
-                    .withPageable(PageRequest.of(0, 100))
+                    .withSort(Sort.by(
+                            Sort.Order.desc("likeCount"),
+                            Sort.Order.desc("viewCount")
+                    ))
+                    .withPageable(PageRequest.of(0, 1))
                     .build();
 
             SearchHits<NewsDocument> searchHits = elasticsearchOperations.search(searchQuery, NewsDocument.class);
 
-            // 인기도 점수 기준으로 정렬하여 상위 1개만 반환
             return searchHits.stream()
                     .map(SearchHit::getContent)
-                    .sorted(Comparator.comparingDouble((NewsDocument doc) -> doc.getLikeCount() * 2.0 + doc.getViewCount()).reversed())
-                    .limit(1)
                     .toList();
         } catch (Exception e) {
             log.error("Error searching weekly news", e);
@@ -120,16 +122,16 @@ public class PopularContentService {
 
             NativeQuery searchQuery = NativeQuery.builder()
                     .withQuery(rangeQuery)
-                    .withPageable(PageRequest.of(0, 100))
+                    .withSort(Sort.by(
+                            Sort.Order.desc("likeCount"),
+                            Sort.Order.desc("viewCount")
+                    ))
                     .build();
 
             SearchHits<CsKnowledgeDocument> searchHits = elasticsearchOperations.search(searchQuery, CsKnowledgeDocument.class);
 
-            // 인기도 점수 기준으로 정렬하여 상위 1개만 반환
             return searchHits.stream()
                     .map(SearchHit::getContent)
-                    .sorted(Comparator.comparingDouble((CsKnowledgeDocument doc) -> doc.getLikeCount() * 2.0 + doc.getViewCount()).reversed())
-                    .limit(1)
                     .toList();
         } catch (Exception e) {
             log.error("Error searching weekly cs knowledge", e);
