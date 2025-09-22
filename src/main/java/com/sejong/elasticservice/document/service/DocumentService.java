@@ -1,5 +1,6 @@
 package com.sejong.elasticservice.document.service;
 
+import com.sejong.elasticservice.document.domain.DocumentDocument;
 import com.sejong.elasticservice.document.dto.DocumentSearchDto;
 import com.sejong.elasticservice.document.repository.DocumentRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,8 @@ public class DocumentService {
     }
 
     public List<DocumentSearchDto> searchDocuments(String query, int size, int page) {
-        return documentRepository.searchDocuments(query, size, page);
+      List<DocumentDocument> documentDocuments = documentRepository.searchDocuments(query, size, page);
+      return documentDocuments.stream().map(DocumentSearchDto::toDocumentSearchDto).toList();
     }
 
 }

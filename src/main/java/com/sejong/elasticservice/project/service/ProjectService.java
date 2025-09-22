@@ -1,5 +1,6 @@
 package com.sejong.elasticservice.project.service;
 
+import com.sejong.elasticservice.project.domain.ProjectDocument;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import com.sejong.elasticservice.project.repository.ProjectRepository;
@@ -26,10 +27,7 @@ public class ProjectService {
             int size,
             int page
     ) {
-        List<ProjectSearchDto> projectSearchDtos = projectElasticRepository.searchProjects(
-                query, projectStatus, categories, techStacks, size,page
-        );
-
-        return projectSearchDtos;
+        List<ProjectDocument> projectDocuments = projectElasticRepository.searchProjects(query, projectStatus, categories, techStacks, size, page);
+        return projectDocuments.stream().map(ProjectSearchDto::toProjectSearchDto).toList();
     }
 }

@@ -39,7 +39,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     @Override
-    public List<NewsSearchDto> searchNews(String keyword, String category, int page, int size) {
+    public List<NewsDocument> searchNews(String keyword, String category, int page, int size) {
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(keyword)
                 .fields("content.title^3", "content.summary^2", "content.content^1", "content.category^1")
@@ -70,12 +70,11 @@ public class NewsRepositoryImpl implements NewsRepository {
         SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
         return searchHits.getSearchHits().stream()
                 .map(SearchHit::getContent)
-                .map(NewsSearchDto::toNewsSearchDto)
                 .toList();
     }
 
     @Override
-    public List<NewsSearchDto> searchByTags(List<String> tags, int page, int size) {
+    public List<NewsDocument> searchByTags(List<String> tags, int page, int size) {
         if (tags == null || tags.isEmpty()) {
             return List.of();
         }
@@ -97,7 +96,6 @@ public class NewsRepositoryImpl implements NewsRepository {
         SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
         return searchHits.getSearchHits().stream()
                 .map(SearchHit::getContent)
-                .map(NewsSearchDto::toNewsSearchDto)
                 .toList();
     }
 

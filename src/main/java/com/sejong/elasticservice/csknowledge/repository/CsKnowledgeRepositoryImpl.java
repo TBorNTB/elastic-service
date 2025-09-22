@@ -38,7 +38,7 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
     }
 
     @Override
-    public List<CsKnowledgeSearchDto> searchCsKnowledge(String keyword, String category, int page, int size) {
+    public List<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, int page, int size) {
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(keyword)
                 .fields("title^3", "content^2", "category^1")
@@ -69,7 +69,6 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
         SearchHits<CsKnowledgeDocument> searchHits = operations.search(nativeQuery, CsKnowledgeDocument.class);
         return searchHits.getSearchHits().stream()
                 .map(SearchHit::getContent)
-                .map(CsKnowledgeSearchDto::toCsKnowledgeSearchDto)
                 .toList();
     }
 

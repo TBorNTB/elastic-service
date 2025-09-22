@@ -63,7 +63,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
-    public List<ProjectSearchDto> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page) {
+    public List<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page) {
 
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(query)
@@ -116,7 +116,6 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
          return searchHits.stream()
                  .map(SearchHit::getContent)
-                 .map(ProjectSearchDto::toProjectSearchDto)
                  .toList();
     }
 

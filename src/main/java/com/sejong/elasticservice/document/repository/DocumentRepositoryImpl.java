@@ -57,7 +57,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     }
 
     @Override
-    public List<DocumentSearchDto> searchDocuments(String query, int size, int page) {
+    public List<DocumentDocument> searchDocuments(String query, int size, int page) {
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(query)
                 .fields("title^3", "description^2", "content")
@@ -77,7 +77,6 @@ public class DocumentRepositoryImpl implements DocumentRepository {
 
         return searchHits.stream()
                 .map(SearchHit::getContent)
-                .map(DocumentSearchDto::toDocumentSearchDto)
                 .toList();
     }
 }

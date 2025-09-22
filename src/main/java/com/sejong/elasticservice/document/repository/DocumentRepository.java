@@ -1,6 +1,7 @@
 package com.sejong.elasticservice.document.repository;
 
 
+import com.sejong.elasticservice.document.domain.DocumentDocument;
 import com.sejong.elasticservice.document.domain.DocumentEvent;
 import com.sejong.elasticservice.document.dto.DocumentSearchDto;
 import java.util.List;
@@ -12,5 +13,5 @@ public interface DocumentRepository {
 
     List<String> getSuggestions(String query);
 
-    List<DocumentSearchDto> searchDocuments(String query, int size, int page);
+    List<DocumentDocument> searchDocuments(String query, int size, int page);
 }
