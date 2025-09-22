@@ -69,7 +69,8 @@ jobs:
 
             docker run -d --name ${{ secrets.IMAGE_NAME }} -P \
               --network ${{secrets.DOCKER_NETWORK_NAME}} \
-              -e EC2_HOST="${{ secrets.EC2_HOST }}" \
+              -e EC2_HOST_APP="${{secrets.EC2_HOST_APP}}" \
+              -e EC2_HOST_INFRA="${{secrets.EC2_HOST_INFRA}}" \
               -e DB_URL="${{ secrets.DB_URL }}" \
               -e DB_USERNAME="${{ secrets.DB_USERNAME }}" \
               -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
