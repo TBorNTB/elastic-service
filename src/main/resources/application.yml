@@ -5,7 +5,7 @@ spring:
   application:
     name: elastic-service
   kafka:
-    bootstrap-servers: ${EC2_HOST_INFRA}:9092
+    bootstrap-servers: kafka:9092
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -19,7 +19,7 @@ spring:
       ribbon:
         enabled: false
   elasticsearch:
-    uris: http://${EC2_HOST_INFRA}:9200
+    uris: http://elastic:9200
     connection-timeout: 5s
     socket-timeout: 30s
   data:
