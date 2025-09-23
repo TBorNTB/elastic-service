@@ -7,6 +7,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
 import com.sejong.elasticservice.document.domain.DocumentDocument;
 import com.sejong.elasticservice.document.domain.DocumentEvent;
+import com.sejong.elasticservice.document.dto.DocumentSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -19,8 +20,9 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class DocumentElasticRepositoryImpl implements DocumentElasticRepository {
-    private final DocumentElasticDocumentRepository repository;
+public class DocumentRepositoryImpl implements DocumentRepository {
+
+    private final DocumenDocumentRepository repository;
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
@@ -55,7 +57,7 @@ public class DocumentElasticRepositoryImpl implements DocumentElasticRepository 
     }
 
     @Override
-    public List<DocumentEvent> searchDocuments(String query, int size, int page) {
+    public List<DocumentDocument> searchDocuments(String query, int size, int page) {
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(query)
                 .fields("title^3", "description^2", "content")
@@ -75,7 +77,6 @@ public class DocumentElasticRepositoryImpl implements DocumentElasticRepository 
 
         return searchHits.stream()
                 .map(SearchHit::getContent)
-                .map(DocumentDocument::toDocument)
                 .toList();
     }
 }

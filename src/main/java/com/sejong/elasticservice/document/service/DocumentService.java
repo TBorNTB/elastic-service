@@ -1,7 +1,8 @@
 package com.sejong.elasticservice.document.service;
 
-import com.sejong.elasticservice.document.domain.DocumentEvent;
-import com.sejong.elasticservice.document.repository.DocumentElasticRepository;
+import com.sejong.elasticservice.document.domain.DocumentDocument;
+import com.sejong.elasticservice.document.dto.DocumentSearchDto;
+import com.sejong.elasticservice.document.repository.DocumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +12,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DocumentService {
 
-    private final DocumentElasticRepository documentElasticRepository;
+    private final DocumentRepository documentRepository;
 
     public List<String> getSuggestions(String query) {
-        return documentElasticRepository.getSuggestions(query);
+        return documentRepository.getSuggestions(query);
     }
 
-    public List<DocumentEvent> searchDocuments(String query, int size, int page) {
-        return documentElasticRepository.searchDocuments(query,size,page);
+    public List<DocumentSearchDto> searchDocuments(String query, int size, int page) {
+      List<DocumentDocument> documentDocuments = documentRepository.searchDocuments(query, size, page);
+      return documentDocuments.stream().map(DocumentSearchDto::toDocumentSearchDto).toList();
     }
 
 }

@@ -35,6 +35,17 @@
           "nori_readingform",
           "lowercase"
         ]
+      },
+      "csknowledge_category_analyzer": {
+        "char_filter": [
+          "html_strip"
+        ],
+        "tokenizer": "nori_tokenizer",
+        "filter": [
+          "nori_part_of_speech",
+          "nori_readingform",
+          "lowercase"
+        ]
       }
     }
   }

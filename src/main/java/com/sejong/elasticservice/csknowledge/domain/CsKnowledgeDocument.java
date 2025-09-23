@@ -26,7 +26,10 @@ public class CsKnowledgeDocument {
     @Field(type = FieldType.Text, analyzer = "csknowledge_content_analyzer")
     private String content;
 
-    @Field(type = FieldType.Keyword)
+    @MultiField(
+            mainField = @Field(type = FieldType.Text, analyzer = "csknowledge_category_analyzer"),
+            otherFields = {@InnerField(suffix = "raw", type = FieldType.Keyword)}
+    )
     private String category;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")

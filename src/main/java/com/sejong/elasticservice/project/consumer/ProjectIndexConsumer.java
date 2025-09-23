@@ -5,7 +5,7 @@ import com.sejong.elasticservice.common.constants.GroupNames;
 import com.sejong.elasticservice.common.constants.TopicNames;
 import com.sejong.elasticservice.project.domain.ProjectIndexEvent;
 import com.sejong.elasticservice.common.constants.Type;
-import com.sejong.elasticservice.project.repository.ProjectElasticRepository;
+import com.sejong.elasticservice.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ProjectIndexConsumer {
-    private final ProjectElasticRepository repo;
+    private final ProjectRepository repo;
 
     @KafkaListener(
             topics = TopicNames.PROJECT,
