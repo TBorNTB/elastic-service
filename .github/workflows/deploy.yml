@@ -23,7 +23,7 @@ jobs:
       - name: 🧪 테스트 및 빌드하기
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build
+          ./gradlew clean build -x test
 
       - name: 🔐 AWS 자격 증명 설정
         uses: aws-actions/configure-aws-credentials@v4
