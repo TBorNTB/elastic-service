@@ -41,7 +41,3 @@ springdoc:
 logging:
   level:
     org.elasticsearch.client: TRACE
-
-app:
-  kafka:
-    topic: project-events
