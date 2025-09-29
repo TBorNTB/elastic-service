@@ -3,29 +3,43 @@ server:
 
 spring:
   application:
-    name: elastic-service
+    name: ELASTIC-SERVICE
+
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: 172.31.41.153:9092
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
+
   thymeleaf:
     enabled: false
+
   cloud:
     discovery:
-      enabled: false
+      enabled: true
     loadbalancer:
       ribbon:
         enabled: false
+
   elasticsearch:
-    uris: http://elastic:9200
+    uris: http://172.31.41.153:9200
     connection-timeout: 5s
     socket-timeout: 30s
+
   data:
     elasticsearch:
       repositories:
         enabled: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://172.31.33.31:8761/eureka/   # 유레카가 있는 '앱서버'의 사설 IP
+  instance:
+    prefer-ip-address: true
 
 springdoc:
   api-docs:
