@@ -40,6 +40,9 @@ eureka:
       defaultZone: http://172.31.33.31:8761/eureka/   # 유레카가 있는 '앱서버'의 사설 IP
   instance:
     prefer-ip-address: true
+    ip-address: 172.31.41.153
+    non-secure-port: 8080
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 springdoc:
   api-docs:
