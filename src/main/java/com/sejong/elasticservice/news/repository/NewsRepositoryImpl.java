@@ -33,7 +33,7 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     @Override
     public List<NewsEvent> searchByTitle(String keyword) {
-        // TODO: Implement search logic
+        // TODO: Implement search logic.
         return List.of();
     }
 
