@@ -1,11 +1,9 @@
 package com.sejong.elasticservice.internal.service;
 
 import co.elastic.clients.elasticsearch._types.Script;
-import co.elastic.clients.elasticsearch._types.ScriptLanguage;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.ScriptScoreQuery;
-import co.elastic.clients.json.JsonData;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.internal.dto.PopularContentResponse;
 import com.sejong.elasticservice.news.domain.NewsDocument;
@@ -65,18 +63,17 @@ public class PopularContentService {
     private List<ProjectDocument> searchWeeklyProjects(String oneWeekAgo) {
         try {
             Query rangeQuery = RangeQuery.of(r -> r
-                    .field("createdAt")
-                    .gte(JsonData.of(oneWeekAgo))
+                    .date(d -> d
+                            .field("createdAt")
+                            .gte(oneWeekAgo)
+                    )
             )._toQuery();
 
             // Script Score Query: likeCount * 2 + viewCount
             Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
                     .query(rangeQuery)
                     .script(Script.of(sc -> sc
-                            .inline(i -> i
-                                    .lang(ScriptLanguage.Painless)
-                                    .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
-                            )
+                            .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
                     ))
             )._toQuery();
 
@@ -99,18 +96,17 @@ public class PopularContentService {
     private List<NewsDocument> searchWeeklyNews(String oneWeekAgo) {
         try {
             Query rangeQuery = RangeQuery.of(r -> r
-                    .field("createdAt")
-                    .gte(JsonData.of(oneWeekAgo))
+                    .date(d -> d
+                            .field("createdAt")
+                            .gte(oneWeekAgo)
+                    )
             )._toQuery();
 
             // Script Score Query: likeCount * 2 + viewCount
             Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
                     .query(rangeQuery)
                     .script(Script.of(sc -> sc
-                            .inline(i -> i
-                                    .lang(ScriptLanguage.Painless)
-                                    .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
-                            )
+                            .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
                     ))
             )._toQuery();
 
@@ -133,18 +129,17 @@ public class PopularContentService {
     private List<CsKnowledgeDocument> searchWeeklyCsKnowledge(String oneWeekAgo) {
         try {
             Query rangeQuery = RangeQuery.of(r -> r
-                    .field("createdAt")
-                    .gte(JsonData.of(oneWeekAgo))
+                    .date(d -> d
+                            .field("createdAt")
+                            .gte(oneWeekAgo)
+                    )
             )._toQuery();
 
             // Script Score Query: likeCount * 2 + viewCount
             Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
                     .query(rangeQuery)
                     .script(Script.of(sc -> sc
-                            .inline(i -> i
-                                    .lang(ScriptLanguage.Painless)
-                                    .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
-                            )
+                            .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
                     ))
             )._toQuery();
 

@@ -39,7 +39,7 @@ dependencies {
 
     // elastic
     implementation 'org.springframework.data:spring-data-elasticsearch'
-    implementation 'co.elastic.clients:elasticsearch-java:8.13.4' // Elasticsearch Java Client
+    implementation 'co.elastic.clients:elasticsearch-java:8.18.1' // Elasticsearch Java Client (Spring Boot 3.5.4 호환)
 
     //kafka
     implementation 'org.springframework.kafka:spring-kafka'
