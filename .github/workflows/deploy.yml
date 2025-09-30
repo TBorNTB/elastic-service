@@ -71,7 +71,9 @@ jobs:
               -p 8080:8080 \
               --network ${{secrets.DOCKER_NETWORK_NAME}} \
               -e EC2_HOST_APP="${{secrets.EC2_HOST_APP}}" \
+              -e EC2_HOST_APP="${{secrets.EC2_HOST_APP_PRIVATE}}" \
               -e EC2_HOST_INFRA="${{secrets.EC2_HOST_INFRA}}" \
+              -e EC2_HOST_APP="${{secrets.EC2_HOST_INFRA_PRIVATE}}" \
               -e DB_URL="${{ secrets.DB_URL }}" \
               -e DB_USERNAME="${{ secrets.DB_USERNAME }}" \
               -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
