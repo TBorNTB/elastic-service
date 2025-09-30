@@ -1,7 +1,10 @@
 package com.sejong.elasticservice.internal.service;
 
+import co.elastic.clients.elasticsearch._types.Script;
+import co.elastic.clients.elasticsearch._types.ScriptLanguage;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.ScriptScoreQuery;
 import co.elastic.clients.json.JsonData;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.internal.dto.PopularContentResponse;
@@ -10,7 +13,6 @@ import com.sejong.elasticservice.project.domain.ProjectDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -67,12 +69,20 @@ public class PopularContentService {
                     .gte(JsonData.of(oneWeekAgo))
             )._toQuery();
 
-            NativeQuery searchQuery = NativeQuery.builder()
-                    .withQuery(rangeQuery)
-                    .withSort(Sort.by(
-                            Sort.Order.desc("likeCount"),
-                            Sort.Order.desc("viewCount")
+            // Script Score Query: likeCount * 2 + viewCount
+            Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
+                    .query(rangeQuery)
+                    .script(Script.of(sc -> sc
+                            .inline(i -> i
+                                    .lang(ScriptLanguage.Painless)
+                                    .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
+                            )
                     ))
+            )._toQuery();
+
+            NativeQuery searchQuery = NativeQuery.builder()
+                    .withQuery(scriptScoreQuery)
+                    .withPageable(PageRequest.of(0, 1))
                     .build();
 
             SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(searchQuery, ProjectDocument.class);
@@ -93,12 +103,19 @@ public class PopularContentService {
                     .gte(JsonData.of(oneWeekAgo))
             )._toQuery();
 
-            NativeQuery searchQuery = NativeQuery.builder()
-                    .withQuery(rangeQuery)
-                    .withSort(Sort.by(
-                            Sort.Order.desc("likeCount"),
-                            Sort.Order.desc("viewCount")
+            // Script Score Query: likeCount * 2 + viewCount
+            Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
+                    .query(rangeQuery)
+                    .script(Script.of(sc -> sc
+                            .inline(i -> i
+                                    .lang(ScriptLanguage.Painless)
+                                    .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
+                            )
                     ))
+            )._toQuery();
+
+            NativeQuery searchQuery = NativeQuery.builder()
+                    .withQuery(scriptScoreQuery)
                     .withPageable(PageRequest.of(0, 1))
                     .build();
 
@@ -120,12 +137,20 @@ public class PopularContentService {
                     .gte(JsonData.of(oneWeekAgo))
             )._toQuery();
 
-            NativeQuery searchQuery = NativeQuery.builder()
-                    .withQuery(rangeQuery)
-                    .withSort(Sort.by(
-                            Sort.Order.desc("likeCount"),
-                            Sort.Order.desc("viewCount")
+            // Script Score Query: likeCount * 2 + viewCount
+            Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
+                    .query(rangeQuery)
+                    .script(Script.of(sc -> sc
+                            .inline(i -> i
+                                    .lang(ScriptLanguage.Painless)
+                                    .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
+                            )
                     ))
+            )._toQuery();
+
+            NativeQuery searchQuery = NativeQuery.builder()
+                    .withQuery(scriptScoreQuery)
+                    .withPageable(PageRequest.of(0, 1))
                     .build();
 
             SearchHits<CsKnowledgeDocument> searchHits = elasticsearchOperations.search(searchQuery, CsKnowledgeDocument.class);
