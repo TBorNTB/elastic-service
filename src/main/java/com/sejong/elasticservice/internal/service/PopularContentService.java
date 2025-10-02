@@ -1,9 +1,8 @@
 package com.sejong.elasticservice.internal.service;
 
-import co.elastic.clients.elasticsearch._types.Script;
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.ScriptScoreQuery;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.internal.dto.PopularContentResponse;
 import com.sejong.elasticservice.news.domain.NewsDocument;
@@ -29,10 +28,11 @@ import java.util.List;
 public class PopularContentService {
 
     private final ElasticsearchOperations elasticsearchOperations;
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     public PopularContentResponse getMostPopularContent() {
-        String oneWeekAgo = LocalDateTime.now().minusWeeks(1)
-                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        // 테스트 데이터와 동일한 형식 사용
+        String oneWeekAgo = LocalDateTime.now().minusWeeks(1).format(FORMATTER);
 
         List<PopularContentResponse> allContent = new ArrayList<>();
 
@@ -62,31 +62,47 @@ public class PopularContentService {
 
     private List<ProjectDocument> searchWeeklyProjects(String oneWeekAgo) {
         try {
-            Query rangeQuery = RangeQuery.of(r -> r
-                    .date(d -> d
-                            .field("createdAt")
-                            .gte(oneWeekAgo)
-                    )
-            )._toQuery();
+            log.info("Searching projects from: {}", oneWeekAgo);
 
-            // Script Score Query: likeCount * 2 + viewCount
-            Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
-                    .query(rangeQuery)
-                    .script(Script.of(sc -> sc
-                            .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
-                    ))
-            )._toQuery();
+            // createdAt >= oneWeekAgo 조건
+            Query rangeQuery = Query.of(q -> q
+                    .range(r -> r
+                            .date(d -> d
+                                    .field("createdAt")
+                                    .gte(oneWeekAgo)
+                            )
+                    )
+            );
+
+            // Elasticsearch의 Script Sort를 사용하여 정렬
+            SortOptions scriptSort = SortOptions.of(s -> s
+                    .script(sc -> sc
+                            .script(script -> script
+                                    .source("doc['likeCount'].value * 2 + doc['viewCount'].value")
+                            )
+                            .order(SortOrder.Desc)
+                            .type(co.elastic.clients.elasticsearch._types.ScriptSortType.Number)
+                    )
+            );
 
             NativeQuery searchQuery = NativeQuery.builder()
-                    .withQuery(scriptScoreQuery)
-                    .withPageable(PageRequest.of(0, 1))
+                    .withQuery(rangeQuery)
+                    .withSort(List.of(scriptSort))
+                    .withPageable(PageRequest.of(0, 1))  // 상위 1개만
                     .build();
 
             SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(searchQuery, ProjectDocument.class);
+            log.info("Found {} projects, returning top 1", searchHits.getTotalHits());
 
-            return searchHits.stream()
+            List<ProjectDocument> results = searchHits.stream()
                     .map(SearchHit::getContent)
                     .toList();
+
+            results.forEach(doc -> log.info("Selected project: {} (like={}, view={}, score={})",
+                doc.getTitle(), doc.getLikeCount(), doc.getViewCount(),
+                doc.getLikeCount() * 2 + doc.getViewCount()));
+
+            return results;
         } catch (Exception e) {
             log.error("Error searching weekly projects", e);
             return new ArrayList<>();
@@ -95,24 +111,31 @@ public class PopularContentService {
 
     private List<NewsDocument> searchWeeklyNews(String oneWeekAgo) {
         try {
-            Query rangeQuery = RangeQuery.of(r -> r
-                    .date(d -> d
-                            .field("createdAt")
-                            .gte(oneWeekAgo)
+            // createdAt >= oneWeekAgo 조건
+            Query rangeQuery = Query.of(q -> q
+                    .range(r -> r
+                            .date(d -> d
+                                    .field("createdAt")
+                                    .gte(oneWeekAgo)
+                            )
                     )
-            )._toQuery();
+            );
 
-            // Script Score Query: likeCount * 2 + viewCount
-            Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
-                    .query(rangeQuery)
-                    .script(Script.of(sc -> sc
-                            .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
-                    ))
-            )._toQuery();
+            // Elasticsearch의 Script Sort를 사용하여 정렬
+            SortOptions scriptSort = SortOptions.of(s -> s
+                    .script(sc -> sc
+                            .script(script -> script
+                                    .source("doc['likeCount'].value * 2 + doc['viewCount'].value")
+                            )
+                            .order(SortOrder.Desc)
+                            .type(co.elastic.clients.elasticsearch._types.ScriptSortType.Number)
+                    )
+            );
 
             NativeQuery searchQuery = NativeQuery.builder()
-                    .withQuery(scriptScoreQuery)
-                    .withPageable(PageRequest.of(0, 1))
+                    .withQuery(rangeQuery)
+                    .withSort(List.of(scriptSort))
+                    .withPageable(PageRequest.of(0, 1))  // 상위 1개만
                     .build();
 
             SearchHits<NewsDocument> searchHits = elasticsearchOperations.search(searchQuery, NewsDocument.class);
@@ -128,24 +151,31 @@ public class PopularContentService {
 
     private List<CsKnowledgeDocument> searchWeeklyCsKnowledge(String oneWeekAgo) {
         try {
-            Query rangeQuery = RangeQuery.of(r -> r
-                    .date(d -> d
-                            .field("createdAt")
-                            .gte(oneWeekAgo)
+            // createdAt >= oneWeekAgo 조건
+            Query rangeQuery = Query.of(q -> q
+                    .range(r -> r
+                            .date(d -> d
+                                    .field("createdAt")
+                                    .gte(oneWeekAgo)
+                            )
                     )
-            )._toQuery();
+            );
 
-            // Script Score Query: likeCount * 2 + viewCount
-            Query scriptScoreQuery = ScriptScoreQuery.of(s -> s
-                    .query(rangeQuery)
-                    .script(Script.of(sc -> sc
-                            .source("(doc['likeCount'].size() == 0 ? 0 : doc['likeCount'].value) * 2 + (doc['viewCount'].size() == 0 ? 0 : doc['viewCount'].value)")
-                    ))
-            )._toQuery();
+            // Elasticsearch의 Script Sort를 사용하여 정렬
+            SortOptions scriptSort = SortOptions.of(s -> s
+                    .script(sc -> sc
+                            .script(script -> script
+                                    .source("doc['likeCount'].value * 2 + doc['viewCount'].value")
+                            )
+                            .order(SortOrder.Desc)
+                            .type(co.elastic.clients.elasticsearch._types.ScriptSortType.Number)
+                    )
+            );
 
             NativeQuery searchQuery = NativeQuery.builder()
-                    .withQuery(scriptScoreQuery)
-                    .withPageable(PageRequest.of(0, 1))
+                    .withQuery(rangeQuery)
+                    .withSort(List.of(scriptSort))
+                    .withPageable(PageRequest.of(0, 1))  // 상위 1개만
                     .build();
 
             SearchHits<CsKnowledgeDocument> searchHits = elasticsearchOperations.search(searchQuery, CsKnowledgeDocument.class);
