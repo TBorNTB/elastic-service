@@ -44,7 +44,7 @@
           "news_synonyms"
         ]
       },
-      "news_description_analyzer": {
+      "news_summary_analyzer": {
         "char_filter": [
           "html_strip"
         ],
@@ -56,6 +56,17 @@
         ]
       },
       "news_content_analyzer" :{
+        "char_filter" :[
+          "html_strip"
+        ],
+        "tokenizer": "nori_tokenizer",
+        "filter": [
+          "nori_part_of_speech",
+          "nori_readingform",
+          "lowercase"
+        ]
+      },
+      "news_category_analyzer" :{
         "char_filter" :[
           "html_strip"
         ],

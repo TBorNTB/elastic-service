@@ -1,6 +1,6 @@
 package com.sejong.elasticservice.project.controller;
 
-import com.sejong.elasticservice.project.domain.ProjectEvent;
+import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import com.sejong.elasticservice.project.service.ProjectService;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,7 @@ public class ProjectController {
     //todo 정렬 및 desc asc 지원되게 해야됨
     @GetMapping("/search")
     @Operation(summary = "elastic 내용물 전체 조회 => 현재 정렬 방식은 지원 안함")
-    public ResponseEntity<List<ProjectEvent>> searchProjects(
+    public ResponseEntity<List<ProjectSearchDto>> searchProjects(
             @RequestParam String query,
             @RequestParam ProjectStatus projectStatus,
             @RequestParam(defaultValue ="") List<String> categories,
@@ -43,7 +43,7 @@ public class ProjectController {
 
     ) {
 
-        List<ProjectEvent> response = projectService.searchProjects(
+        List<ProjectSearchDto> response = projectService.searchProjects(
                 query, projectStatus, categories, techStacks, size,page
         );
         return ResponseEntity.ok(response);
