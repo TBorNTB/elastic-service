@@ -6,6 +6,7 @@ import com.sejong.elasticservice.news.domain.Content;
 import com.sejong.elasticservice.news.domain.NewsDocument;
 import com.sejong.elasticservice.project.domain.ProjectDocument;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,21 @@ class PopularContentServiceTest {
     @BeforeEach
     void setUp() {
         // 테스트 전 기존 데이터 삭제
-        // 인덱스는 애플리케이션 시작 시 자동 생성되므로 여기서는 데이터만 정리
-        // (주의: 애플리케이션을 먼저 실행하여 인덱스가 생성되어 있어야 합니다)
+        try {
+            // 모든 인덱스의 모든 문서 삭제
+            elasticsearchOperations.indexOps(ProjectDocument.class).delete();
+            elasticsearchOperations.indexOps(NewsDocument.class).delete();
+            elasticsearchOperations.indexOps(CsKnowledgeDocument.class).delete();
+
+            // 인덱스 재생성 (매핑은 Document 클래스에서 자동 생성)
+            elasticsearchOperations.indexOps(ProjectDocument.class).create();
+            elasticsearchOperations.indexOps(NewsDocument.class).create();
+            elasticsearchOperations.indexOps(CsKnowledgeDocument.class).create();
+
+            Thread.sleep(1000); // 인덱스 생성 대기
+        } catch (Exception e) {
+            System.out.println("Setup error (ignored): " + e.getMessage());
+        }
     }
 
     @Test
@@ -76,21 +90,13 @@ class PopularContentServiceTest {
         // 가장 인기 있는 컨텐츠 조회
         PopularContentResponse result = popularContentService.getMostPopularContent();
 
-        // 결과 출력
-        System.out.println("\n========== 인기글 조회 결과 ==========");
-        if (result != null) {
-            System.out.println("타입: " + result.getContentType());
-            System.out.println("제목: " + result.getTitle());
-            System.out.println("좋아요: " + result.getLikeCount());
-            System.out.println("조회수: " + result.getViewCount());
-            System.out.println("인기도 점수: " + result.calculatePopularityScore());
-            System.out.println("생성일: " + result.getCreatedAt());
-        } else {
-            System.out.println("결과 없음");
-        }
-        System.out.println("=====================================\n");
-
-        // 예상 결과: 프로젝트 E (인기도 700)
+        // 검증: 프로젝트 E가 선택되어야 함 (인기도 700)
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("프로젝트 E", result.getTitle());
+        Assertions.assertEquals("PROJECT", result.getContentType());
+        Assertions.assertEquals(100L, result.getLikeCount());
+        Assertions.assertEquals(500L, result.getViewCount());
+        Assertions.assertEquals(700.0, result.calculatePopularityScore());
     }
 
     @Test
@@ -126,17 +132,8 @@ class PopularContentServiceTest {
         // 가장 인기 있는 컨텐츠 조회
         PopularContentResponse result = popularContentService.getMostPopularContent();
 
-        // 결과 출력
-        System.out.println("\n========== 100개 초과 테스트 결과 ==========");
-        if (result != null) {
-            System.out.println("제목: " + result.getTitle());
-            System.out.println("좋아요: " + result.getLikeCount());
-            System.out.println("조회수: " + result.getViewCount());
-            System.out.println("인기도 점수: " + result.calculatePopularityScore());
-        }
-        System.out.println("==========================================\n");
-
-        // 예상: "슈퍼 인기 프로젝트" 선택 (Script Score Query가 제대로 동작하면)
+        // 검증: 슈퍼 인기 프로젝트가 선택되어야 함 (인기도 7000)
+        Assertions.assertEquals(7000, result.calculatePopularityScore());
     }
 
     private ProjectDocument createProject(String id, String title, LocalDateTime createdAt, Long likeCount, Long viewCount) {
