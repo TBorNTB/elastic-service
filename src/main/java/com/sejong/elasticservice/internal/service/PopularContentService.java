@@ -4,7 +4,7 @@ import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
-import com.sejong.elasticservice.internal.dto.PopularContentResponse;
+import com.sejong.elasticservice.internal.dto.ContentResponse;
 import com.sejong.elasticservice.news.domain.NewsDocument;
 import com.sejong.elasticservice.project.domain.ProjectDocument;
 import lombok.RequiredArgsConstructor;
@@ -28,35 +28,35 @@ import java.util.List;
 public class PopularContentService {
 
     private final ElasticsearchOperations elasticsearchOperations;
-  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-    public PopularContentResponse getMostPopularContent() {
+    public ContentResponse getMostPopularContent() {
         // 테스트 데이터와 동일한 형식 사용
         String oneWeekAgo = LocalDateTime.now().minusWeeks(1).format(FORMATTER);
 
-        List<PopularContentResponse> allContent = new ArrayList<>();
+        List<ContentResponse> allContent = new ArrayList<>();
 
         // Project 검색
         List<ProjectDocument> projects = searchWeeklyProjects(oneWeekAgo);
         projects.forEach(project ->
-            allContent.add(PopularContentResponse.fromProject(project))
+            allContent.add(ContentResponse.fromProject(project))
         );
 
         // News 검색
         List<NewsDocument> news = searchWeeklyNews(oneWeekAgo);
         news.forEach(newsItem ->
-            allContent.add(PopularContentResponse.fromNews(newsItem))
+            allContent.add(ContentResponse.fromNews(newsItem))
         );
 
         // CsKnowledge 검색
         List<CsKnowledgeDocument> csKnowledges = searchWeeklyCsKnowledge(oneWeekAgo);
         csKnowledges.forEach(cs ->
-            allContent.add(PopularContentResponse.fromCsKnowledge(cs))
+            allContent.add(ContentResponse.fromCsKnowledge(cs))
         );
 
         // 인기도 점수 계산하여 가장 높은 1개 반환 (좋아요 * 2 + 조회수). 같을 시 임의의 컨텐츠 반환
         return allContent.stream()
-                .max(Comparator.comparingDouble(PopularContentResponse::calculatePopularityScore))
+                .max(Comparator.comparingDouble(ContentResponse::calculatePopularityScore))
                 .orElse(null);
     }
 
