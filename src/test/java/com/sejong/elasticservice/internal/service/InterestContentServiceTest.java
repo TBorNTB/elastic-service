@@ -133,7 +133,7 @@ class InterestContentServiceTest {
     }
 
     @Test
-    void testGetRandomContentsWithOnlyProjects() throws InterruptedException {
+    void 프로젝트만_존재하는_경우_랜덤_콘텐츠_조회() throws InterruptedException {
         LocalDateTime now = LocalDateTime.now();
 
         // NETWORK_SECURITY 카테고리의 Project만 존재
@@ -161,7 +161,7 @@ class InterestContentServiceTest {
     }
 
     @Test
-    void testGetRandomContentsWithOnlyCsKnowledge() throws InterruptedException {
+    void CS지식만_존재하는_경우_랜덤_콘텐츠_조회() throws InterruptedException {
         LocalDateTime now = LocalDateTime.now();
 
         // REVERSING 카테고리의 CsKnowledge만 존재
@@ -189,7 +189,7 @@ class InterestContentServiceTest {
     }
 
     @Test
-    void testGetRandomContentsWithNoData() throws InterruptedException {
+    void 데이터가_없는_경우_빈_리스트_반환() throws InterruptedException {
         // 데이터 없이 바로 조회
         Thread.sleep(1000);
 
@@ -204,7 +204,7 @@ class InterestContentServiceTest {
     }
 
     @Test
-    void testGetRandomContentsWithMixedData() throws InterruptedException {
+    void 혼합_데이터에서_랜덤성_확인() throws InterruptedException {
         LocalDateTime now = LocalDateTime.now();
 
         // DIGITAL_FORENSICS 카테고리: Project와 CsKnowledge 모두 존재
@@ -243,7 +243,7 @@ class InterestContentServiceTest {
     }
 
     @Test
-    void testGetRandomContentsWithMultipleCategoriesInProject() throws InterruptedException {
+    void 복수_카테고리를_가진_프로젝트_조회() throws InterruptedException {
         LocalDateTime now = LocalDateTime.now();
 
         // 복수의 카테고리를 가진 Project
