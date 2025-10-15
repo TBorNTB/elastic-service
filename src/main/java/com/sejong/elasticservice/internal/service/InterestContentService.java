@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +63,10 @@ public class InterestContentService {
         try {
             String categoryName = category.name();
 
-            // projectCategories.keyword 필드에 해당 카테고리가 포함된 문서 검색 (text 타입의 keyword 서브필드 사용)
+            // 랜덤 시드 생성 (매 요청마다 다른 결과)
+            long seed = System.currentTimeMillis() + random.nextLong();
+
+            // projectCategories.keyword 필드에 해당 카테고리가 포함된 문서 검색
             Query termQuery = Query.of(q -> q
                     .term(t -> t
                             .field("projectCategories.keyword")
@@ -71,9 +74,19 @@ public class InterestContentService {
                     )
             );
 
+            // function_score로 random_score 사용 (Elasticsearch에서 랜덤 정렬)
+            Query functionScoreQuery = Query.of(q -> q
+                    .functionScore(fs -> fs
+                            .query(termQuery)
+                            .functions(fn -> fn
+                                    .randomScore(rs -> rs.seed(String.valueOf(seed)).field("_seq_no"))
+                            )
+                    )
+            );
+
             NativeQuery searchQuery = NativeQuery.builder()
-                    .withQuery(termQuery)
-                    .withMaxResults(10000)  // 모든 결과 가져오기
+                    .withQuery(functionScoreQuery)
+                    .withPageable(PageRequest.of(0, 1))  // 상위 1개만 조회
                     .build();
 
             SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(
@@ -84,12 +97,7 @@ public class InterestContentService {
                 return null;
             }
 
-            List<ProjectDocument> projects = searchHits.stream()
-                    .map(SearchHit::getContent)
-                    .toList();
-
-            // 랜덤하게 하나 선택
-            ProjectDocument randomProject = projects.get(random.nextInt(projects.size()));
+            ProjectDocument randomProject = searchHits.getSearchHit(0).getContent();
             log.info("Selected random project '{}' for category: {}", randomProject.getTitle(), categoryName);
 
             return ContentResponse.fromProject(randomProject);
@@ -103,7 +111,10 @@ public class InterestContentService {
         try {
             String categoryName = category.name();
 
-            // category.keyword 필드가 해당 카테고리와 정확히 일치하는 문서 검색 (text 타입의 keyword 서브필드 사용)
+            // 랜덤 시드 생성 (매 요청마다 다른 결과)
+            long seed = System.currentTimeMillis() + random.nextLong();
+
+            // category.keyword 필드가 해당 카테고리와 정확히 일치하는 문서 검색
             Query termQuery = Query.of(q -> q
                     .term(t -> t
                             .field("category.keyword")
@@ -111,9 +122,19 @@ public class InterestContentService {
                     )
             );
 
+            // function_score로 random_score 사용 (Elasticsearch에서 랜덤 정렬)
+            Query functionScoreQuery = Query.of(q -> q
+                    .functionScore(fs -> fs
+                            .query(termQuery)
+                            .functions(fn -> fn
+                                    .randomScore(rs -> rs.seed(String.valueOf(seed)).field("_seq_no"))
+                            )
+                    )
+            );
+
             NativeQuery searchQuery = NativeQuery.builder()
-                    .withQuery(termQuery)
-                    .withMaxResults(10000)  // 모든 결과 가져오기
+                    .withQuery(functionScoreQuery)
+                    .withPageable(PageRequest.of(0, 1))  // 상위 1개만 조회
                     .build();
 
             SearchHits<CsKnowledgeDocument> searchHits = elasticsearchOperations.search(
@@ -124,12 +145,7 @@ public class InterestContentService {
                 return null;
             }
 
-            List<CsKnowledgeDocument> csKnowledges = searchHits.stream()
-                    .map(SearchHit::getContent)
-                    .toList();
-
-            // 랜덤하게 하나 선택
-            CsKnowledgeDocument randomCs = csKnowledges.get(random.nextInt(csKnowledges.size()));
+            CsKnowledgeDocument randomCs = searchHits.getSearchHit(0).getContent();
             log.info("Selected random CS knowledge '{}' for category: {}", randomCs.getTitle(), categoryName);
 
             return ContentResponse.fromCsKnowledge(randomCs);
