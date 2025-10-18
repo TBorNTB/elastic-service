@@ -31,7 +31,7 @@ public class InternalController {
         return ResponseEntity.ok(content);
     }
 
-    @GetMapping("/follow-interest")
+    @GetMapping("/interest-contents")
     @Operation(summary = "뉴스레터 구독자의 관심사 컨텐츠 조회")
     public ResponseEntity<List<ContentResponse>> getInterstingContent(List<TechCategory> categories) {
         List<ContentResponse> contents = interestContentService.getRandomContentsOf(categories);
