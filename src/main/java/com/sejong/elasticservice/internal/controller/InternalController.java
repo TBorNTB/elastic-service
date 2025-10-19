@@ -6,7 +6,6 @@ import com.sejong.elasticservice.internal.service.PopularContentService;
 import com.sejong.elasticservice.internal.dto.ContentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
-import java.util.Locale.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +32,7 @@ public class InternalController {
 
     @GetMapping("/interest-contents")
     @Operation(summary = "뉴스레터 구독자의 관심사 컨텐츠 조회")
-    public ResponseEntity<List<ContentResponse>> getInterstingContent(List<TechCategory> categories) {
+    public ResponseEntity<List<ContentResponse>> getInterestingContent(List<TechCategory> categories) {
         List<ContentResponse> contents = interestContentService.getRandomContentsOf(categories);
         return ResponseEntity.ok(contents);
     }
