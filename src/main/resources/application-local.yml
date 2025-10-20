@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8080
 
 spring:
   application:
@@ -38,11 +38,6 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://${EC2_HOST_APP_PRIVATE}:8761/eureka/   # 유레카가 있는 '앱서버'의 사설 IP
-  instance:
-    prefer-ip-address: true
-    ip-address: ${EC2_HOST_INFRA_PRIVATE}
-    non-secure-port: 8080
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 springdoc:
   api-docs:
