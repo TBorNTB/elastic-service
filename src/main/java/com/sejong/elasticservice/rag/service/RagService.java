@@ -1,7 +1,7 @@
 package com.sejong.elasticservice.rag.service;
 
 import com.sejong.elasticservice.rag.controller.response.DocumentSearchResultDto;
-import com.sejong.elasticservice.rag.repository.InMemoryDocumentVectorStore;
+import com.sejong.elasticservice.rag.repository.ElasticDocumentVectorStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.AbstractMessage;
@@ -18,26 +18,40 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RagService {
 
-    private final InMemoryDocumentVectorStore vectorStore;
+    private final ElasticDocumentVectorStore vectorStore;
     private final ChatService chatService;
 
 
     public String uploadPdfFile(File file, String originalFilename) {
         String documentId = UUID.randomUUID().toString();
-        log.info("PDF 문서 업로드 시작. 파일: {}, ID: {}", originalFilename, documentId);
+        log.info("📤 PDF 문서 업로드 시작. 파일: {}, ID: {}, 파일 크기: {} bytes", 
+            originalFilename, documentId, file.length());
 
         Map<String,Object> docMetadata = new HashMap();
         docMetadata.put("originalFilename", originalFilename != null ? originalFilename : "");
         docMetadata.put("uploadTime", System.currentTimeMillis());
+        docMetadata.put("fileSize", file.length());
 
-        vectorStore.addDocumentFile(documentId,file,docMetadata);
-        log.info("PDF 문서 업로드 완료. ID: {}", documentId);
-        return documentId;
+        try {
+            vectorStore.addDocumentFile(documentId, file, docMetadata);
+            log.info("✅ PDF 문서 업로드 완료. ID: {}", documentId);
+            return documentId;
+        } catch (Exception e) {
+            log.error("❌ PDF 문서 업로드 실패. 파일: {}, ID: {}", originalFilename, documentId, e);
+            throw e;
+        }
     }
 
     public List<DocumentSearchResultDto> retrieve(String question, int maxResults) {
         log.debug("검색 시작: '{}', 최대 결과 수: {}", question, maxResults);
-        return vectorStore.similaritySearch(question, maxResults);
+        try {
+            // 개선된 점수 계산 검색 시도
+            return vectorStore.similaritySearchWithImprovedScoring(question, maxResults);
+        } catch (Exception e) {
+            log.warn("개선된 점수 계산 검색 실패, 기본 검색으로 fallback: {}", e.getMessage());
+            // fallback to 기본 검색
+            return vectorStore.similaritySearch(question, maxResults);
+        }
     }
 
     /** 기본 모델로 RAG 응답 생성 (기본값: gpt-3.5-turbo) */
