@@ -1,25 +1,31 @@
 package com.sejong.elasticservice.rag.controller;
 
 import com.sejong.elasticservice.rag.common.ApiResponseDto;
+import com.sejong.elasticservice.rag.controller.request.QueryRequestDto;
+import com.sejong.elasticservice.rag.controller.response.DocumentResponseDto;
+import com.sejong.elasticservice.rag.controller.response.DocumentSearchResultDto;
 import com.sejong.elasticservice.rag.controller.response.DocumentUploadResultResponse;
+import com.sejong.elasticservice.rag.controller.response.QueryResponseDto;
 import com.sejong.elasticservice.rag.service.RagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/rag")
@@ -82,5 +88,54 @@ public class RagController {
             }
         }
 
+    }
+
+    @Operation(
+            summary = "RAG 질의 수행",
+            description = "사용자 질문에 대해 관련 문서를 검색하고 RAG 기반 응답을 생성합니다."
+    )
+    @PostMapping("/query")
+    public ResponseEntity<ApiResponseDto<QueryResponseDto>> queryWithRag(
+            @Parameter(description = "질의 요청 객체", required = true)
+            @RequestBody QueryRequestDto request
+    ) {
+        log.info("RAG 질의 요청 받음: {}", request.getQuery());
+
+        try {
+            // 관련 문서 검색
+            // 타입은 프로젝트에 맞게 변경하세요 (예: List<RetrievedDocument>)
+            List<DocumentSearchResultDto> relevantDocs = ragService.retrieve(request.getQuery(), request.getMaxResults());
+
+            // RAG 기반 응답 생성
+            String answer = ragService.generateAnswerWithContexts(
+                    request.getQuery(),
+                    relevantDocs,
+                    request.getModel()
+            );
+
+            List<DocumentResponseDto> relevantDocumentDtos = toDocumentResponseDto(relevantDocs);
+
+            QueryResponseDto payload = QueryResponseDto.of(request.getQuery(), answer, relevantDocumentDtos);
+
+            return ResponseEntity.ok(ApiResponseDto.ok(payload));
+
+        } catch (Exception e) {
+            log.error("RAG 질의 처리 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponseDto<>(false, null, "질의 처리 중 오류가 발생했습니다: " + e.getMessage()));
+        }
+    }
+
+    @NotNull
+    private static List<DocumentResponseDto> toDocumentResponseDto(List<DocumentSearchResultDto> relevantDocs) {
+        List<DocumentResponseDto> relevantDocumentDtos = relevantDocs.stream()
+                .map(d -> DocumentResponseDto.builder()
+                        .id(d.getId())
+                        .content(d.getContent())
+                        .metadata(d.getMetadata()) // Map<String, Object>
+                        .score(d.getScore())
+                        .build())
+                .collect(java.util.stream.Collectors.toList());
+        return relevantDocumentDtos;
     }
 }
