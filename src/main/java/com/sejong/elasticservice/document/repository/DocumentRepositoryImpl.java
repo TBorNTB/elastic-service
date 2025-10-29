@@ -7,7 +7,6 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
 import com.sejong.elasticservice.document.domain.DocumentDocument;
 import com.sejong.elasticservice.document.domain.DocumentEvent;
-import com.sejong.elasticservice.document.dto.DocumentSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -22,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DocumentRepositoryImpl implements DocumentRepository {
 
-    private final DocumenDocumentRepository repository;
+    private final DocumentDocumentRepository repository;
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
