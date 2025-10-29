@@ -5,6 +5,20 @@ spring:
   application:
     name: ELASTIC-SERVICE
 
+  ai:
+    vectorstore:
+      elasticsearch:
+        index-name: spring-ai-document-index
+        dimensions: 1536  # 사용 중인 임베딩 모델 차원수
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      embedding:
+        options:
+          model: text-embedding-3-small   # 또는 text-embedding-3-l
+      chat:
+        options:
+          model: gpt-4o-mini   # 기본 모델
+
   kafka:
     bootstrap-servers: localhost:9092 
     consumer:
@@ -53,6 +67,8 @@ springdoc:
 logging:
   level:
     org.elasticsearch.client: TRACE
+    com.sejong.elasticservice.rag: DEBUG
+    org.springframework.ai: DEBUG
 
 app:
   kafka:

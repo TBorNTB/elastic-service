@@ -21,7 +21,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
-    
+
+    private final CsKnowledgeDocumentRepository repository;
     private final ElasticsearchOperations operations;
     private final String INDEX_NAME = "cs-knowledge";
 
