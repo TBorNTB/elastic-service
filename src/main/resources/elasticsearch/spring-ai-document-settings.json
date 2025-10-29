@@ -1,0 +1,27 @@
+{
+  "analysis": {
+    "filter": {
+      "spring_ai_synonyms": {
+        "type": "synonym",
+        "synonyms": [
+          "AI, 인공지능",
+          "Machine Learning, 머신러닝"
+        ]
+      }
+    },
+    "analyzer": {
+      "spring_ai_content_analyzer": {
+        "char_filter": [
+          "html_strip"
+        ],
+        "tokenizer": "nori_tokenizer",
+        "filter": [
+          "nori_part_of_speech",
+          "nori_readingform",
+          "lowercase",
+          "spring_ai_synonyms"
+        ]
+      }
+    }
+  }
+}
