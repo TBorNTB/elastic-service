@@ -79,4 +79,5 @@ jobs:
               -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
               -e EUREKA_DEFAULTZONE="${{ secrets.EUREKA_DEFAULTZONE }}" \
+              -e OPENAI_API_KEY=${{secrets.OPENAI_API_KEY}} \
               869508798906.dkr.ecr.ap-northeast-2.amazonaws.com/${{ secrets.REPOSITORY_NAME }}:${{ secrets.IMAGE_NAME }}
