@@ -1,7 +1,7 @@
 package com.sejong.elasticservice.internal.service;
 
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
-import com.sejong.elasticservice.internal.dto.PopularContentResponse;
+import com.sejong.elasticservice.internal.dto.ContentResponse;
 import com.sejong.elasticservice.news.domain.Content;
 import com.sejong.elasticservice.news.domain.NewsDocument;
 import com.sejong.elasticservice.project.domain.ProjectDocument;
@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @SpringBootTest
+@ActiveProfiles("local")
 class PopularContentServiceTest {
 
     @Autowired
@@ -88,7 +90,7 @@ class PopularContentServiceTest {
         Thread.sleep(2000);
 
         // 가장 인기 있는 컨텐츠 조회
-        PopularContentResponse result = popularContentService.getMostPopularContent();
+        ContentResponse result = popularContentService.getMostPopularContent();
 
         // 검증: 프로젝트 E가 선택되어야 함 (인기도 700)
         Assertions.assertNotNull(result);
@@ -130,7 +132,7 @@ class PopularContentServiceTest {
         Thread.sleep(2000);
 
         // 가장 인기 있는 컨텐츠 조회
-        PopularContentResponse result = popularContentService.getMostPopularContent();
+        ContentResponse result = popularContentService.getMostPopularContent();
 
         // 검증: 슈퍼 인기 프로젝트가 선택되어야 함 (인기도 7000)
         Assertions.assertEquals(7000, result.calculatePopularityScore());

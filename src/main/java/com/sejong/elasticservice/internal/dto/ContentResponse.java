@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PopularContentResponse {
+public class ContentResponse {
     private String id;
     private String contentType; // PROJECT, NEWS, CS-KNOWLEDGE
 
@@ -24,8 +24,8 @@ public class PopularContentResponse {
     private long likeCount;
     private long viewCount;
 
-    public static PopularContentResponse fromProject(ProjectDocument project) {
-        return PopularContentResponse.builder()
+    public static ContentResponse fromProject(ProjectDocument project) {
+        return ContentResponse.builder()
                 .id(project.getId())
                 .title(project.getTitle())
                 .content(project.getDescription())
@@ -37,10 +37,10 @@ public class PopularContentResponse {
                 .build();
     }
 
-    public static PopularContentResponse fromNews(NewsDocument newsItem) {
+    public static ContentResponse fromNews(NewsDocument newsItem) {
         String category = newsItem.getContent() != null && newsItem.getContent().getCategory() != null
                 ? newsItem.getContent().getCategory().name() : null;
-        return PopularContentResponse.builder()
+        return ContentResponse.builder()
                 .id(newsItem.getId())
                 .title(newsItem.getContent().getTitle())
                 .content(newsItem.getContent().getSummary())
@@ -52,8 +52,8 @@ public class PopularContentResponse {
                 .build();
     }
 
-    public static PopularContentResponse fromCsKnowledge(CsKnowledgeDocument cs) {
-        return PopularContentResponse.builder()
+    public static ContentResponse fromCsKnowledge(CsKnowledgeDocument cs) {
+        return ContentResponse.builder()
                 .id(cs.getId())
                 .title(cs.getTitle())
                 .content(cs.getContent())
