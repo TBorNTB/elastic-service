@@ -4,13 +4,7 @@
       "csknowledge_synonyms": {
         "type": "synonym",
         "synonyms": [
-          "알고리즘, 알고, Algorithm",
-          "자료구조, 자구, Data Structure",
-          "데이터베이스, 디비, Database, DB",
-          "네트워크, 컴네, Network",
-          "운영체제, 운체, Operating System, OS",
-          "머신러닝, Machine Learning, ML",
-          "인공지능, Artificial Intelligence, AI"
+          "알고리즘, 알고, Algorithm"
         ]
       }
     },
