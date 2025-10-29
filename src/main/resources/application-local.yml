@@ -3,29 +3,41 @@ server:
 
 spring:
   application:
-    name: elastic-service
+    name: ELASTIC-SERVICE
+
   kafka:
     bootstrap-servers: localhost:9092 
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
+
   thymeleaf:
     enabled: false
+
   cloud:
     discovery:
-      enabled: false
+      enabled: true
     loadbalancer:
       ribbon:
         enabled: false
+
   elasticsearch:
     uris: http://localhost:9200 
     connection-timeout: 5s
     socket-timeout: 30s
+
   data:
     elasticsearch:
       repositories:
         enabled: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${EC2_HOST_APP_PRIVATE}:8761/eureka/   # 유레카가 있는 '앱서버'의 사설 IP
 
 springdoc:
   api-docs:
