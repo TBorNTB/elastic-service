@@ -67,10 +67,14 @@ dependencies {
     //일라스틱 벡터디비 의존성
     implementation "org.springframework.ai:spring-ai-elasticsearch-store-spring-boot-starter"
 
-
     //     Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Spring Cloud AWS BOM - AWS 관련 라이브러리들의 버전을 통합 관리
+    implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.1.1')
+    // Logback과의 통합을 위한 라이브러리
+    implementation 'io.github.dibog:cloudwatch-logback-appender:2.0.0'
 }
 
 dependencyManagement {

@@ -51,7 +51,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://${EC2_HOST_APP_PRIVATE}:8761/eureka/   # 유레카가 있는 '앱서버'의 사설 IP
+      defaultZone: http://localhost:8761/eureka/   # 유레카가 있는 '앱서버'의 사설 IP
 
 springdoc:
   api-docs:
