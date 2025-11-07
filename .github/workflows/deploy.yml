@@ -54,9 +54,13 @@ jobs:
       - name: 🔑 SSH로 EC2에 접속 및 배포
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.EC2_HOST_INFRA }}
+          debug: true
+          host: ${{ secrets.EC2_HOST_INFRA_PRIVATE }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
+          proxy_host: ${{ secrets.EC2_HOST_BASTION }}    # Bastion 호스트
+          proxy_username: ${{ secrets.EC2_USERNAME }}
+          proxy_key: ${{ secrets.EC2_PRIVATE_KEY }}          # Bastion용 pem
           script_stop: true
           script: |
             aws ecr get-login-password --region ap-northeast-2 | \
