@@ -25,7 +25,9 @@ public class ProjectDocument {
 
     @MultiField(
             mainField = @Field(type = FieldType.Text, analyzer = "projects_title_analyzer"),
-            otherFields = { @InnerField(suffix = "auto_complete", type = FieldType.Search_As_You_Type, analyzer = "nori") }
+            otherFields = {
+                    @InnerField(suffix = "keyword", type = FieldType.Keyword),
+                    @InnerField(suffix = "auto_complete", type = FieldType.Search_As_You_Type, analyzer = "nori") }
     )
     private String title;
 
