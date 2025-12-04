@@ -98,7 +98,9 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         )._toQuery();
 
         List<Query> filters = new ArrayList<>();
-        if (projectStatus != null) filters.add(projectStatusFilter);
+        if (projectStatus != null && !projectStatus.name().isBlank()) {
+            filters.add(projectStatusFilter);
+        }
         if (!categories.isEmpty()) filters.add(projectCategoriesFilter);
         if (!techStacks.isEmpty()) filters.add(projectTechStacksFilter);
 
