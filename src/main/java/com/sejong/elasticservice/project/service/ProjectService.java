@@ -30,4 +30,9 @@ public class ProjectService {
         List<ProjectDocument> projectDocuments = projectElasticRepository.searchProjects(query, projectStatus, categories, techStacks, size, page);
         return projectDocuments.stream().map(ProjectSearchDto::toProjectSearchDto).toList();
     }
+
+    public List<ProjectSearchDto> searchProjects(int size, int page) {
+        List<ProjectDocument> projectDocuments = projectElasticRepository.searchProjects(size, page);
+        return projectDocuments.stream().map(ProjectSearchDto::toProjectSearchDto).toList();
+    }
 }

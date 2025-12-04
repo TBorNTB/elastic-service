@@ -20,7 +20,6 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-
     @GetMapping("/suggestion")
     @Operation(summary = "검색어 자동 완성 기능")
     public ResponseEntity<List<String>> getSuggestion(
@@ -36,17 +35,26 @@ public class ProjectController {
     public ResponseEntity<List<ProjectSearchDto>> searchProjects(
             @RequestParam String query,
             @RequestParam ProjectStatus projectStatus,
-            @RequestParam(defaultValue ="") List<String> categories,
-            @RequestParam(defaultValue ="") List<String> techStacks,
-            @RequestParam(defaultValue ="5") int size,
+            @RequestParam(defaultValue = "") List<String> categories,
+            @RequestParam(defaultValue = "") List<String> techStacks,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "0") int page
 
     ) {
 
         List<ProjectSearchDto> response = projectService.searchProjects(
-                query, projectStatus, categories, techStacks, size,page
+                query, projectStatus, categories, techStacks, size, page
         );
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/search/latest")
+    @Operation(summary = "최근 파일 조회")
+    public ResponseEntity<List<ProjectSearchDto>> searchLatestProjects(
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        List<ProjectSearchDto> response = projectService.searchProjects(size,page);
+        return ResponseEntity.ok(response);
+    }
 }

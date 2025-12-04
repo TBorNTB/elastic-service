@@ -15,7 +15,11 @@ public interface ProjectRepository {
 
     List<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page);
 
+    List<ProjectDocument> searchProjects(int size, int page);
+
     void updateLikeCount(Long postId, Long likeCount);
 
     void updateViewCount(Long postId, Long viewCount);
+
+
 }

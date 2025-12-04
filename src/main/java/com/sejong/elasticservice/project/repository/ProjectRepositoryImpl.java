@@ -9,6 +9,7 @@ import com.sejong.elasticservice.project.domain.ProjectDocument;
 import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -120,6 +121,20 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
+    public List<ProjectDocument> searchProjects(int size, int page) {
+        NativeQuery nativeQuery = NativeQuery.builder()
+                .withSort(Sort.by(Sort.Order.desc("createdAt")))
+                .withPageable(PageRequest.of(page, size))
+                .build();
+
+        SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(nativeQuery, ProjectDocument.class);
+
+        return searchHits.stream()
+                .map(SearchHit::getContent)
+                .toList();
+    }
+
+    @Override
     public void updateLikeCount(Long postId, Long likeCount) {
         Document patch = Document.create();
         patch.put("likeCount",likeCount);
@@ -144,4 +159,5 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         IndexCoordinates index = elasticsearchOperations.getIndexCoordinatesFor(ProjectDocument.class);
         elasticsearchOperations.update(uq, index);
     }
+
 }
