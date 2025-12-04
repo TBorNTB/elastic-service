@@ -5,7 +5,10 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.news.domain.NewsDocument;
 import com.sejong.elasticservice.news.domain.NewsEvent;
 import com.sejong.elasticservice.news.dto.NewsSearchDto;
+
 import java.util.ArrayList;
+
+import com.sejong.elasticservice.project.domain.ProjectDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -119,11 +122,11 @@ public class NewsRepositoryImpl implements NewsRepository {
     public void updateLikeCount(Long newsId, Long likeCount) {
         Document document = Document.create();
         document.put("likeCount", likeCount);
-        
+
         UpdateQuery updateQuery = UpdateQuery.builder(String.valueOf(newsId))
                 .withDocument(document)
                 .build();
-        
+
         operations.update(updateQuery, IndexCoordinates.of(INDEX_NAME));
     }
 
@@ -131,12 +134,37 @@ public class NewsRepositoryImpl implements NewsRepository {
     public void updateViewCount(Long newsId, Long viewCount) {
         Document document = Document.create();
         document.put("viewCount", viewCount);
-        
+
         UpdateQuery updateQuery = UpdateQuery.builder(String.valueOf(newsId))
                 .withDocument(document)
                 .build();
-        
+
         operations.update(updateQuery, IndexCoordinates.of(INDEX_NAME));
     }
 
+    @Override
+    public List<String> getSuggestions(String query) {
+
+        Query multiMatchQuery = MultiMatchQuery.of(m -> m
+                .query(query)
+                .type(TextQueryType.BoolPrefix)
+                .fields(
+                        "content.title.auto_complete",
+                        "content.title.auto_complete._2gram",
+                        "content.title.auto_complete._3gram"
+                )
+        )._toQuery();
+
+        NativeQuery nativeQuery = NativeQuery.builder()
+                .withQuery(multiMatchQuery)
+                .withPageable(PageRequest.of(0, 5))
+                .build();
+
+        SearchHits<NewsDocument> searchHits =
+                operations.search(nativeQuery, NewsDocument.class);
+
+        return searchHits.getSearchHits().stream()
+                .map(hit -> hit.getContent().getContent().getTitle())
+                .toList();
+    }
 }

@@ -15,8 +15,8 @@ public class NewsService {
     private final NewsRepository newsRepository;
 
     public List<NewsSearchDto> searchNews(String keyword, String category, int page, int size) {
-      List<NewsDocument> newsDocuments = newsRepository.searchNews(keyword, category, page, size);
-      return newsDocuments.stream().map(NewsSearchDto::toNewsSearchDto).toList();
+        List<NewsDocument> newsDocuments = newsRepository.searchNews(keyword, category, page, size);
+        return newsDocuments.stream().map(NewsSearchDto::toNewsSearchDto).toList();
     }
 
     public List<NewsSearchDto> searchNews(int page, int size) {
@@ -25,8 +25,11 @@ public class NewsService {
     }
 
     public List<NewsSearchDto> searchByTags(List<String> tags, int page, int size) {
-      List<NewsDocument> newsDocuments = newsRepository.searchByTags(tags, page, size);
-      return newsDocuments.stream().map(NewsSearchDto::toNewsSearchDto).toList();
+        List<NewsDocument> newsDocuments = newsRepository.searchByTags(tags, page, size);
+        return newsDocuments.stream().map(NewsSearchDto::toNewsSearchDto).toList();
     }
 
+    public List<String> getSuggestions(String query) {
+        return newsRepository.getSuggestions(query);
+    }
 }

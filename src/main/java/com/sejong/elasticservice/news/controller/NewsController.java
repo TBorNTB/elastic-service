@@ -31,6 +31,15 @@ public class NewsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/suggestion")
+    @Operation(summary = "검색어 자동 완성 기능")
+    public ResponseEntity<List<String>> getSuggestion(
+            @RequestParam String query
+    ) {
+        List<String> suggestions = newsService.getSuggestions(query);
+        return ResponseEntity.ok(suggestions);
+    }
+
     @GetMapping("/search/latest")
     @Operation(summary = "뉴스 최근 데이터 조회 - 아티클")
     public ResponseEntity<List<NewsSearchDto>> searchNewsLastest(

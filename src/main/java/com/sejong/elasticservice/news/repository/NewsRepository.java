@@ -14,4 +14,5 @@ public interface NewsRepository {
     void updateLikeCount(Long newsId, Long likeCount);
     void updateViewCount(Long newsId, Long viewCount);
 
+    List<String> getSuggestions(String query);
 }
