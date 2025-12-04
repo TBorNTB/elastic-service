@@ -1,7 +1,9 @@
 package com.sejong.elasticservice.project.repository;
 
+import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.project.domain.ProjectDocument;
 import com.sejong.elasticservice.project.domain.ProjectEvent;
+import com.sejong.elasticservice.project.domain.ProjectSortType;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import java.util.List;
@@ -13,7 +15,7 @@ public interface ProjectRepository {
 
     List<String> getSuggestions(String query);
 
-    List<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page);
+    PageResponse<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, ProjectSortType projectSortType , int size, int page);
 
     List<ProjectDocument> searchProjects(int size, int page);
 

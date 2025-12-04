@@ -1,5 +1,7 @@
 package com.sejong.elasticservice.project.controller;
 
+import com.sejong.elasticservice.common.pagenation.PageResponse;
+import com.sejong.elasticservice.project.domain.ProjectSortType;
 import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import com.sejong.elasticservice.project.service.ProjectService;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
@@ -32,18 +34,18 @@ public class ProjectController {
     //todo 정렬 및 desc asc 지원되게 해야됨
     @GetMapping("/search")
     @Operation(summary = "elastic 내용물 전체 조회 => 현재 정렬 방식은 지원 안함")
-    public ResponseEntity<List<ProjectSearchDto>> searchProjects(
+    public ResponseEntity<PageResponse<ProjectSearchDto>> searchProjects(
             @RequestParam String query,
             @RequestParam ProjectStatus projectStatus,
             @RequestParam(defaultValue = "") List<String> categories,
             @RequestParam(defaultValue = "") List<String> techStacks,
+            @RequestParam(defaultValue = "LATEST") ProjectSortType projectSortType, // 최신순, 인기순, 이름순
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "0") int page
-
     ) {
 
-        List<ProjectSearchDto> response = projectService.searchProjects(
-                query, projectStatus, categories, techStacks, size, page
+        PageResponse<ProjectSearchDto> response = projectService.searchProjects(
+                query, projectStatus, categories, techStacks, projectSortType, size, page
         );
         return ResponseEntity.ok(response);
     }
@@ -54,7 +56,7 @@ public class ProjectController {
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "0") int page
     ) {
-        List<ProjectSearchDto> response = projectService.searchProjects(size,page);
+        List<ProjectSearchDto> response = projectService.searchProjects(size, page);
         return ResponseEntity.ok(response);
     }
 }

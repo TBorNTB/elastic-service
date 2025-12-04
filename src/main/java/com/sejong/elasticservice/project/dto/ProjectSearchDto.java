@@ -26,7 +26,7 @@ public class ProjectSearchDto {
     private long likeCount;
     private long viewCount;
 
-    public static ProjectSearchDto toProjectSearchDto(ProjectDocument document) {
+    public static ProjectSearchDto from(ProjectDocument document) {
         return ProjectSearchDto.builder()
                 .id(document.getId())
                 .title(document.getTitle())

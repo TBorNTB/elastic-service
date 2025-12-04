@@ -3,7 +3,9 @@ package com.sejong.elasticservice.project.repository;
 
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
+import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.project.domain.ProjectEvent;
+import com.sejong.elasticservice.project.domain.ProjectSortType;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import com.sejong.elasticservice.project.domain.ProjectDocument;
 import com.sejong.elasticservice.project.dto.ProjectSearchDto;
@@ -11,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
@@ -64,9 +64,11 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
-    public List<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, int size, int page) {
+    public PageResponse<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, ProjectSortType projectSortType , int size, int page) {
 
-        Query multiMatchQuery = MultiMatchQuery.of(m -> m
+        Query textQuery = (query == null || query.isBlank())
+                ? MatchAllQuery.of(m -> m)._toQuery()
+                : MultiMatchQuery.of(m -> m
                 .query(query)
                 .fields("title^3", "description^1")
                 .fuzziness("AUTO")
@@ -101,12 +103,19 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         if (!techStacks.isEmpty()) filters.add(projectTechStacksFilter);
 
         Query boolQuery = BoolQuery.of(b -> b
-                .must(multiMatchQuery)
+                .must(textQuery)
                 .filter(filters)
         )._toQuery();
 
+        Sort sort = switch (projectSortType) {
+            case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
+            case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
+            case NAME -> Sort.by(Sort.Direction.ASC, "title.keyword");
+        };
+
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
+                .withSort(sort)
                 .withPageable(PageRequest.of(page, size))
                 .build();
 
@@ -115,9 +124,17 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 ProjectDocument.class
         );
 
-         return searchHits.stream()
-                 .map(SearchHit::getContent)
-                 .toList();
+        SearchPage<ProjectDocument> searchPage = SearchHitSupport.searchPageFor(searchHits, PageRequest.of(page, size));
+
+        return new PageResponse<>(
+                searchPage.getContent().stream()
+                        .map(SearchHit::getContent)
+                        .toList(),
+                searchPage.getNumber(),
+                searchPage.getSize(),
+                searchPage.getTotalElements(),
+                searchPage.getTotalPages()
+        );
     }
 
     @Override
