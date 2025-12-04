@@ -31,6 +31,17 @@ public class NewsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/search/latest")
+    @Operation(summary = "뉴스 최근 데이터 조회 - 아티클")
+    public ResponseEntity<List<NewsSearchDto>> searchNewsLastest(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        List<NewsSearchDto> response = newsService.searchNews(page, size);
+        return ResponseEntity.ok(response);
+
+    }
+
     @GetMapping("/search/tags")
     @Operation(summary = "뉴스 태그로 검색")
     public ResponseEntity<List<NewsSearchDto>> searchByTags(
@@ -41,4 +52,5 @@ public class NewsController {
         List<NewsSearchDto> response = newsService.searchByTags(tags, page, size);
         return ResponseEntity.ok(response);
     }
+
 }

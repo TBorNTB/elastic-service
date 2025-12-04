@@ -8,6 +8,7 @@ import com.sejong.elasticservice.news.dto.NewsSearchDto;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -70,6 +71,20 @@ public class NewsRepositoryImpl implements NewsRepository {
 
         SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
         return searchHits.getSearchHits().stream()
+                .map(SearchHit::getContent)
+                .toList();
+    }
+
+    @Override
+    public List<NewsDocument> searchNews(int page, int size) {
+        NativeQuery nativeQuery = NativeQuery.builder()
+                .withSort(Sort.by(Sort.Order.desc("createdAt")))
+                .withPageable(PageRequest.of(page, size))
+                .build();
+
+        SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
+
+        return searchHits.stream()
                 .map(SearchHit::getContent)
                 .toList();
     }

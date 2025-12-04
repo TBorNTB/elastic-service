@@ -19,8 +19,14 @@ public class NewsService {
       return newsDocuments.stream().map(NewsSearchDto::toNewsSearchDto).toList();
     }
 
+    public List<NewsSearchDto> searchNews(int page, int size) {
+        List<NewsDocument> newsDocuments = newsRepository.searchNews(page, size);
+        return newsDocuments.stream().map(NewsSearchDto::toNewsSearchDto).toList();
+    }
+
     public List<NewsSearchDto> searchByTags(List<String> tags, int page, int size) {
       List<NewsDocument> newsDocuments = newsRepository.searchByTags(tags, page, size);
       return newsDocuments.stream().map(NewsSearchDto::toNewsSearchDto).toList();
     }
+
 }
