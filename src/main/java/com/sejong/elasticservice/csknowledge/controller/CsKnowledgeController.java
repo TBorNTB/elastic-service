@@ -24,7 +24,7 @@ public class CsKnowledgeController {
     public ResponseEntity<List<CsKnowledgeSearchDto>> searchCsKnowledge(
             @RequestParam String keyword,
             @RequestParam(required = false) String category,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         List<CsKnowledgeSearchDto> response = csKnowledgeService.searchCsKnowledge(keyword, category, page, size);

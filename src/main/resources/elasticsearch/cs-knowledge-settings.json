@@ -1,7 +1,7 @@
 {
   "analysis": {
     "filter": {
-      "csknowledge_synonyms": {
+      "cs-knowledge_synonyms": {
         "type": "synonym",
         "synonyms": [
           "알고리즘, 알고, Algorithm"
@@ -9,17 +9,17 @@
       }
     },
     "analyzer": {
-      "csknowledge_title_analyzer": {
+      "cs-knowledge_title_analyzer": {
         "char_filter": [],
         "tokenizer": "nori_tokenizer",
         "filter": [
           "nori_part_of_speech",
           "nori_readingform",
           "lowercase",
-          "csknowledge_synonyms"
+          "cs-knowledge_synonyms"
         ]
       },
-      "csknowledge_content_analyzer": {
+      "cs-knowledge_content_analyzer": {
         "char_filter": [
           "html_strip"
         ],
@@ -30,7 +30,7 @@
           "lowercase"
         ]
       },
-      "csknowledge_category_analyzer": {
+      "cs-knowledge_category_analyzer": {
         "char_filter": [
           "html_strip"
         ],

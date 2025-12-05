@@ -3,7 +3,6 @@ package com.sejong.elasticservice.csknowledge.repository;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeEvent;
-import com.sejong.elasticservice.csknowledge.dto.CsKnowledgeSearchDto;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

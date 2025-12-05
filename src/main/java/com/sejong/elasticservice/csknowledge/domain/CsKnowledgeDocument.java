@@ -10,24 +10,27 @@ import org.springframework.data.elasticsearch.annotations.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "csknowledge")
-@Setting(settingPath = "/elasticsearch/csknowledge-settings.json")
+@Document(indexName = "cs-knowledge")
+@Setting(settingPath = "/elasticsearch/cs-knowledge-settings.json")
 public class CsKnowledgeDocument {
 
     @Id
     private String id;
 
     @MultiField(
-            mainField = @Field(type = FieldType.Text, analyzer = "csknowledge_title_analyzer"),
+            mainField = @Field(type = FieldType.Text, analyzer = "cs-knowledge_title_analyzer"),
             otherFields = { @InnerField(suffix = "auto_complete", type = FieldType.Search_As_You_Type, analyzer = "nori") }
     )
     private String title;
 
-    @Field(type = FieldType.Text, analyzer = "csknowledge_content_analyzer")
+    @Field(type = FieldType.Text, analyzer = "cs-knowledge_content_analyzer")
     private String content;
 
+    @Field(type = FieldType.Keyword)
+    private String writerId;
+
     @MultiField(
-            mainField = @Field(type = FieldType.Text, analyzer = "csknowledge_category_analyzer"),
+            mainField = @Field(type = FieldType.Text, analyzer = "cs-knowledge_category_analyzer"),
             otherFields = {@InnerField(suffix = "raw", type = FieldType.Keyword)}
     )
     private String category;
@@ -47,6 +50,7 @@ public class CsKnowledgeDocument {
     public static CsKnowledgeDocument from(CsKnowledgeEvent csKnowledgeEvent) {
         return CsKnowledgeDocument.builder()
                 .id(csKnowledgeEvent.getId())
+                .writerId(csKnowledgeEvent.getWriterId())
                 .title(csKnowledgeEvent.getTitle())
                 .content(csKnowledgeEvent.getContent())
                 .category(csKnowledgeEvent.getCategory())
