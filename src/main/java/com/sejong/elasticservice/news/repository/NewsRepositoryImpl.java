@@ -2,6 +2,7 @@ package com.sejong.elasticservice.news.repository;
 
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
+import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.news.domain.NewsDocument;
 import com.sejong.elasticservice.news.domain.NewsEvent;
 import com.sejong.elasticservice.news.dto.NewsSearchDto;
@@ -9,13 +10,12 @@ import com.sejong.elasticservice.news.dto.NewsSearchDto;
 import java.util.ArrayList;
 
 import com.sejong.elasticservice.project.domain.ProjectDocument;
+import com.sejong.elasticservice.project.domain.ProjectSortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
@@ -44,8 +44,11 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     @Override
-    public List<NewsDocument> searchNews(String keyword, String category, int page, int size) {
-        Query multiMatchQuery = MultiMatchQuery.of(m -> m
+    public PageResponse<NewsDocument> searchNews(String keyword, String category, ProjectSortType projectSortType, int page, int size) {
+
+        Query multiMatchQuery = (keyword == null || keyword.isEmpty())
+                ? MatchAllQuery.of(m -> m)._toQuery()
+                : MultiMatchQuery.of(m -> m
                 .query(keyword)
                 .fields("content.title^3", "content.summary^2", "content.content^1", "content.category^1")
                 .fuzziness("AUTO")
@@ -67,15 +70,32 @@ public class NewsRepositoryImpl implements NewsRepository {
                 .filter(filters)
         )._toQuery();
 
+        Sort sort = switch (projectSortType) {
+            case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
+            case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
+            case NAME -> Sort.by(Sort.Direction.ASC, "title.keyword");
+        };
+
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
+                .withSort(sort)
                 .withPageable(PageRequest.of(page - 1, size))
                 .build();
 
         SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
-        return searchHits.getSearchHits().stream()
-                .map(SearchHit::getContent)
-                .toList();
+
+        SearchPage<NewsDocument> searchPage = SearchHitSupport.searchPageFor(searchHits, PageRequest.of(page, size));
+
+
+        return new PageResponse<>(
+                searchPage.getContent().stream()
+                        .map(SearchHit::getContent)
+                        .toList(),
+                searchPage.getNumber(),
+                searchPage.getSize(),
+                searchPage.getTotalElements(),
+                searchPage.getTotalPages()
+        );
     }
 
     @Override
