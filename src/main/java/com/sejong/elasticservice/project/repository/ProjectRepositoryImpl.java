@@ -112,7 +112,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         Sort sort = switch (projectSortType) {
             case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
             case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
-            case NAME -> Sort.by(Sort.Direction.ASC, "title.keyword");
+            case VIEW -> Sort.by(Sort.Direction.ASC, "viewCount");
         };
 
         NativeQuery nativeQuery = NativeQuery.builder()
