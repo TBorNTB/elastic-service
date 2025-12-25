@@ -73,7 +73,7 @@ public class NewsRepositoryImpl implements NewsRepository {
         Sort sort = switch (projectSortType) {
             case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
             case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
-            case NAME -> Sort.by(Sort.Direction.ASC, "title.keyword");
+            case VIEW -> Sort.by(Sort.Direction.ASC, "viewCount");
         };
 
         NativeQuery nativeQuery = NativeQuery.builder()
@@ -85,7 +85,6 @@ public class NewsRepositoryImpl implements NewsRepository {
         SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
 
         SearchPage<NewsDocument> searchPage = SearchHitSupport.searchPageFor(searchHits, PageRequest.of(page, size));
-
 
         return new PageResponse<>(
                 searchPage.getContent().stream()
