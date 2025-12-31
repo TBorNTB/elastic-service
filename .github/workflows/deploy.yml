@@ -75,7 +75,7 @@ jobs:
 
       - name: 🚀 Run container
         run: |
-            docker run -d --name ${{ secrets.IMAGE_NAME }} \
+            docker run -d --name ${{ secrets.IMAGE_NAME }} -P \
               --network ${{secrets.DOCKER_NETWORK_NAME}} \
               -e DB_HOST="${{secrets.DB_HOST}}" \
               -e APP_HOST="${{secrets.APP_HOST}}" \
