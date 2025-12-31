@@ -42,16 +42,14 @@ spring:
         enabled: true
 
 eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://${APP_HOST}:8761/eureka/   # 유레카가 있는 '앱서버'의 사설 IP
-  instance:
-    prefer-ip-address: true
-    ip-address: ${DB_HOST}
-    non-secure-port: 8080
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+      defaultZone: ${EUREKA_DEFAULTZONE}
 
 springdoc:
   api-docs:
