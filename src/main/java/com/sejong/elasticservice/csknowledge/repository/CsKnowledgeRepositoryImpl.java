@@ -4,9 +4,11 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeEvent;
+import com.sejong.elasticservice.project.domain.ProjectSortType;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.document.Document;
@@ -59,7 +61,7 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
     }
 
     @Override
-    public PageResponse<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, int page, int size) {
+    public PageResponse<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, ProjectSortType sortType, int page, int size) {
         Query textQuery = (keyword == null || keyword.isBlank())
                 ? MatchAllQuery.of(m -> m)._toQuery()
                 : MultiMatchQuery.of(m -> m
@@ -84,8 +86,15 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
                 .filter(filters)
         )._toQuery();
 
+        Sort sort = switch (sortType) {
+            case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
+            case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
+            case VIEW -> Sort.by(Sort.Direction.ASC, "viewCount");
+        };
+
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
+                .withSort(sort)
                 .withPageable(PageRequest.of(page, size))
                 .build();
 

@@ -3,6 +3,7 @@ package com.sejong.elasticservice.csknowledge.controller;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.csknowledge.dto.CsKnowledgeSearchDto;
 import com.sejong.elasticservice.csknowledge.service.CsKnowledgeService;
+import com.sejong.elasticservice.project.domain.ProjectSortType;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +35,11 @@ public class CsKnowledgeController {
     public ResponseEntity<PageResponse<CsKnowledgeSearchDto>> searchCsKnowledge(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "LATEST") ProjectSortType sortType,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        PageResponse<CsKnowledgeSearchDto> response = csKnowledgeService.searchCsKnowledge(keyword, category, page, size);
+        PageResponse<CsKnowledgeSearchDto> response = csKnowledgeService.searchCsKnowledge(keyword, category, sortType, page, size);
         return ResponseEntity.ok(response);
     }
 }
