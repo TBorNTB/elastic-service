@@ -24,7 +24,7 @@ public class NewsController {
     @GetMapping("/search")
     @Operation(summary = "뉴스 검색 (키워드 + 카테고리 필터)")
     public ResponseEntity<PageResponse<NewsSearchDto>> searchNews(
-            @RequestParam String keyword,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "LATEST") ProjectSortType projectSortType, // 최신순, 인기순, 이름순
             @RequestParam(defaultValue = "0") int page,
