@@ -18,4 +18,8 @@ public class CsKnowledgeService {
       List<CsKnowledgeDocument> csKnowledgeDocuments = csKnowledgeRepository.searchCsKnowledge(keyword, category, page, size);
       return csKnowledgeDocuments.stream().map(CsKnowledgeSearchDto::toCsKnowledgeSearchDto).toList();
     }
+
+    public List<String> getSuggestions(String query) {
+        return csKnowledgeRepository.getSuggestions(query);
+    }
 }

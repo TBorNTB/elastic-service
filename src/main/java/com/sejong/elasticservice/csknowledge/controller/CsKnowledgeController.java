@@ -19,10 +19,19 @@ public class CsKnowledgeController {
 
     private final CsKnowledgeService csKnowledgeService;
 
+    @GetMapping("/suggestion")
+    @Operation(summary = "검색어 자동 완성 기능")
+    public ResponseEntity<List<String>> getSuggestion(
+            @RequestParam String query
+    ) {
+        List<String> suggestions = csKnowledgeService.getSuggestions(query);
+        return ResponseEntity.ok(suggestions);
+    }
+
     @GetMapping("/search")
     @Operation(summary = "CS 지식 검색 (키워드 + 카테고리 필터)")
     public ResponseEntity<List<CsKnowledgeSearchDto>> searchCsKnowledge(
-            @RequestParam String keyword,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size

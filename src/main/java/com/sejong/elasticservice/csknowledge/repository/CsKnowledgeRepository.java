@@ -9,6 +9,7 @@ public interface CsKnowledgeRepository {
     String save(CsKnowledgeEvent csKnowledgeEvent);
     void deleteById(String csKnowledgeId);
     List<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, int page, int size);
+    List<String> getSuggestions(String query);
     void updateLikeCount(Long csKnowledgeId, Long likeCount);
     void updateViewCount(Long csKnowledgeId, Long viewCount);
 }

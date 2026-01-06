@@ -38,8 +38,32 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
     }
 
     @Override
-    public List<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, int page, int size) {
+    public List<String> getSuggestions(String query) {
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
+                .query(query)
+                .type(TextQueryType.BoolPrefix)
+                .fields("title.auto_complete", "title.auto_complete._2gram",
+                        "title.auto_complete._3gram"))._toQuery();
+
+        NativeQuery nativeQuery = NativeQuery.builder()
+                .withQuery(multiMatchQuery)
+                .withPageable(PageRequest.of(0, 5))
+                .build();
+
+        SearchHits<CsKnowledgeDocument> searchHits = operations.search(nativeQuery, CsKnowledgeDocument.class);
+        return searchHits.getSearchHits().stream()
+                .map(hit -> {
+                    CsKnowledgeDocument csKnowledgeDocument = hit.getContent();
+                    return csKnowledgeDocument.getTitle();
+                })
+                .toList();
+    }
+
+    @Override
+    public List<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, int page, int size) {
+        Query textQuery = (keyword == null || keyword.isBlank())
+                ? MatchAllQuery.of(m -> m)._toQuery()
+                : MultiMatchQuery.of(m -> m
                 .query(keyword)
                 .fields("title^3", "content^2", "category^1")
                 .fuzziness("AUTO")
@@ -57,7 +81,7 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
 
         // bool query 조합
         Query boolQuery = BoolQuery.of(b -> b
-                .must(multiMatchQuery)
+                .must(textQuery)
                 .filter(filters)
         )._toQuery();
 
