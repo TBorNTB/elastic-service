@@ -1,15 +1,14 @@
 package com.sejong.elasticservice.csknowledge.repository;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
+import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeEvent;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
@@ -60,7 +59,7 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
     }
 
     @Override
-    public List<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, int page, int size) {
+    public PageResponse<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, int page, int size) {
         Query textQuery = (keyword == null || keyword.isBlank())
                 ? MatchAllQuery.of(m -> m)._toQuery()
                 : MultiMatchQuery.of(m -> m
@@ -87,13 +86,21 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
 
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
-                .withPageable(PageRequest.of(page - 1, size))
+                .withPageable(PageRequest.of(page, size))
                 .build();
 
         SearchHits<CsKnowledgeDocument> searchHits = operations.search(nativeQuery, CsKnowledgeDocument.class);
-        return searchHits.getSearchHits().stream()
-                .map(SearchHit::getContent)
-                .toList();
+        SearchPage<CsKnowledgeDocument> searchPage = SearchHitSupport.searchPageFor(searchHits, PageRequest.of(page, size));
+
+        return new PageResponse<>(
+                searchPage.getContent().stream()
+                        .map(SearchHit::getContent)
+                        .toList(),
+                searchPage.getNumber(),
+                searchPage.getSize(),
+                searchPage.getTotalElements(),
+                searchPage.getTotalPages()
+        );
     }
 
     @Override

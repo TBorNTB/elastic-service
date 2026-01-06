@@ -1,5 +1,6 @@
 package com.sejong.elasticservice.csknowledge.service;
 
+import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.csknowledge.dto.CsKnowledgeSearchDto;
 import com.sejong.elasticservice.csknowledge.repository.CsKnowledgeRepository;
@@ -14,9 +15,20 @@ public class CsKnowledgeService {
 
     private final CsKnowledgeRepository csKnowledgeRepository;
 
-    public List<CsKnowledgeSearchDto> searchCsKnowledge(String keyword, String category, int page, int size) {
-      List<CsKnowledgeDocument> csKnowledgeDocuments = csKnowledgeRepository.searchCsKnowledge(keyword, category, page, size);
-      return csKnowledgeDocuments.stream().map(CsKnowledgeSearchDto::toCsKnowledgeSearchDto).toList();
+    public PageResponse<CsKnowledgeSearchDto> searchCsKnowledge(String keyword, String category, int page, int size) {
+        PageResponse<CsKnowledgeDocument> result = csKnowledgeRepository.searchCsKnowledge(keyword, category, page, size);
+        List<CsKnowledgeSearchDto> dtoList = result.content()
+                .stream()
+                .map(CsKnowledgeSearchDto::toCsKnowledgeSearchDto)
+                .toList();
+
+        return new PageResponse<>(
+                dtoList,
+                result.page(),
+                result.size(),
+                result.totalElements(),
+                result.totalPages()
+        );
     }
 
     public List<String> getSuggestions(String query) {
