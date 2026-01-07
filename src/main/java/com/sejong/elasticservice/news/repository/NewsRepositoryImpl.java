@@ -71,7 +71,6 @@ public class NewsRepositoryImpl implements NewsRepository {
         Sort sort = switch (postSortType) {
             case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
             case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
-            case VIEW -> Sort.by(Sort.Direction.ASC, "viewCount");
         };
 
         NativeQuery nativeQuery = NativeQuery.builder()

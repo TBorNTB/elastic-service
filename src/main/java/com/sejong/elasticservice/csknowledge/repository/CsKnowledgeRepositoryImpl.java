@@ -89,7 +89,6 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
         Sort sort = switch (sortType) {
             case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
             case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
-            case VIEW -> Sort.by(Sort.Direction.ASC, "viewCount");
         };
 
         NativeQuery nativeQuery = NativeQuery.builder()
