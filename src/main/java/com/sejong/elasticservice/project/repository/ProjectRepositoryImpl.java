@@ -5,10 +5,9 @@ import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.project.domain.ProjectEvent;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import com.sejong.elasticservice.project.domain.ProjectDocument;
-import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -64,7 +63,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
-    public PageResponse<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, ProjectSortType projectSortType , int size, int page) {
+    public PageResponse<ProjectDocument> searchProjects(String query, ProjectStatus projectStatus, List<String> categories, List<String> techStacks, PostSortType postSortType, int size, int page) {
 
         Query textQuery = (query == null || query.isBlank())
                 ? MatchAllQuery.of(m -> m)._toQuery()
@@ -109,7 +108,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 .filter(filters)
         )._toQuery();
 
-        Sort sort = switch (projectSortType) {
+        Sort sort = switch (postSortType) {
             case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
             case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
             case VIEW -> Sort.by(Sort.Direction.ASC, "viewCount");

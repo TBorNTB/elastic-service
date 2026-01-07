@@ -4,8 +4,7 @@ import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.news.domain.NewsDocument;
 import com.sejong.elasticservice.news.dto.NewsSearchDto;
 import com.sejong.elasticservice.news.repository.NewsRepository;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
-import com.sejong.elasticservice.project.dto.ProjectSearchDto;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,8 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
 
-    public PageResponse<NewsSearchDto> searchNews(String keyword, String category, ProjectSortType projectSortType, int page, int size) {
-        PageResponse<NewsDocument> result = newsRepository.searchNews(keyword, category, projectSortType, page, size);
+    public PageResponse<NewsSearchDto> searchNews(String keyword, String category, PostSortType postSortType, int page, int size) {
+        PageResponse<NewsDocument> result = newsRepository.searchNews(keyword, category, postSortType, page, size);
         List<NewsSearchDto> dtoList = result.content()
                 .stream()
                 .map(NewsSearchDto::toNewsSearchDto)

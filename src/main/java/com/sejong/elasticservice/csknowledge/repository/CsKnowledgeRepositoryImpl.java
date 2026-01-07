@@ -4,7 +4,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeEvent;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -61,7 +61,7 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
     }
 
     @Override
-    public PageResponse<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, ProjectSortType sortType, int page, int size) {
+    public PageResponse<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, PostSortType sortType, int page, int size) {
         Query textQuery = (keyword == null || keyword.isBlank())
                 ? MatchAllQuery.of(m -> m)._toQuery()
                 : MultiMatchQuery.of(m -> m

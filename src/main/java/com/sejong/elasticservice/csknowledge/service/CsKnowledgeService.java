@@ -4,7 +4,7 @@ import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.csknowledge.dto.CsKnowledgeSearchDto;
 import com.sejong.elasticservice.csknowledge.repository.CsKnowledgeRepository;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class CsKnowledgeService {
 
     private final CsKnowledgeRepository csKnowledgeRepository;
 
-    public PageResponse<CsKnowledgeSearchDto> searchCsKnowledge(String keyword, String category, ProjectSortType sortType, int page, int size) {
+    public PageResponse<CsKnowledgeSearchDto> searchCsKnowledge(String keyword, String category, PostSortType sortType, int page, int size) {
         PageResponse<CsKnowledgeDocument> result = csKnowledgeRepository.searchCsKnowledge(keyword, category, sortType, page, size);
         List<CsKnowledgeSearchDto> dtoList = result.content()
                 .stream()

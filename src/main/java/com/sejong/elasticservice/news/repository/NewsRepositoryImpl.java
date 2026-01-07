@@ -5,12 +5,10 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.news.domain.NewsDocument;
 import com.sejong.elasticservice.news.domain.NewsEvent;
-import com.sejong.elasticservice.news.dto.NewsSearchDto;
 
 import java.util.ArrayList;
 
-import com.sejong.elasticservice.project.domain.ProjectDocument;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -44,7 +42,7 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     @Override
-    public PageResponse<NewsDocument> searchNews(String keyword, String category, ProjectSortType projectSortType, int page, int size) {
+    public PageResponse<NewsDocument> searchNews(String keyword, String category, PostSortType postSortType, int page, int size) {
 
         Query multiMatchQuery = (keyword == null || keyword.isBlank())
                 ? MatchAllQuery.of(m -> m)._toQuery()
@@ -70,7 +68,7 @@ public class NewsRepositoryImpl implements NewsRepository {
                 .filter(filters)
         )._toQuery();
 
-        Sort sort = switch (projectSortType) {
+        Sort sort = switch (postSortType) {
             case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
             case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
             case VIEW -> Sort.by(Sort.Direction.ASC, "viewCount");
