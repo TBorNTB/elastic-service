@@ -1,7 +1,6 @@
 package com.sejong.elasticservice.project.domain;
 
-public enum ProjectSortType {
+public enum PostSortType {
     LATEST,
     POPULAR,
-    VIEW
 }

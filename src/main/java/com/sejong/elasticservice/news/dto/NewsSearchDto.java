@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewsSearchDto {
-    private String id;
+    private Long id;
     private Content content;
     private String thumbnailPath;
     private String writerId;
@@ -27,7 +27,7 @@ public class NewsSearchDto {
 
     public static NewsSearchDto toNewsSearchDto(NewsDocument document) {
         return NewsSearchDto.builder()
-                .id(document.getId())
+                .id(Long.parseLong(document.getId()))
                 .content(document.getContent())
                 .thumbnailPath(document.getThumbnailPath())
                 .writerId(document.getWriterId())

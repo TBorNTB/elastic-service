@@ -5,12 +5,10 @@ import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.news.domain.NewsDocument;
 import com.sejong.elasticservice.news.domain.NewsEvent;
-import com.sejong.elasticservice.news.dto.NewsSearchDto;
 
 import java.util.ArrayList;
 
-import com.sejong.elasticservice.project.domain.ProjectDocument;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -44,9 +42,9 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     @Override
-    public PageResponse<NewsDocument> searchNews(String keyword, String category, ProjectSortType projectSortType, int page, int size) {
+    public PageResponse<NewsDocument> searchNews(String keyword, String category, PostSortType postSortType, int page, int size) {
 
-        Query multiMatchQuery = (keyword == null || keyword.isEmpty())
+        Query multiMatchQuery = (keyword == null || keyword.isBlank())
                 ? MatchAllQuery.of(m -> m)._toQuery()
                 : MultiMatchQuery.of(m -> m
                 .query(keyword)
@@ -56,7 +54,7 @@ public class NewsRepositoryImpl implements NewsRepository {
 
         List<Query> filters = new ArrayList<>();
         // term filter 쿼리 : 카테고리가 정확히 일치하는 것만 필터링
-        if (category != null && !category.isEmpty()) {
+        if (category != null && !category.trim().isEmpty()) {
             Query categoryFilter = TermQuery.of(t -> t
                     .field("content.category.raw")
                     .value(category)
@@ -70,16 +68,15 @@ public class NewsRepositoryImpl implements NewsRepository {
                 .filter(filters)
         )._toQuery();
 
-        Sort sort = switch (projectSortType) {
+        Sort sort = switch (postSortType) {
             case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
             case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
-            case VIEW -> Sort.by(Sort.Direction.ASC, "viewCount");
         };
 
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
                 .withSort(sort)
-                .withPageable(PageRequest.of(page - 1, size))
+                .withPageable(PageRequest.of(page, size))
                 .build();
 
         SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
@@ -99,14 +96,17 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     @Override
     public List<NewsDocument> searchNews(int page, int size) {
+        Query matchAllQuery = MatchAllQuery.of(m -> m)._toQuery();
+
         NativeQuery nativeQuery = NativeQuery.builder()
+                .withQuery(matchAllQuery)
                 .withSort(Sort.by(Sort.Order.desc("createdAt")))
                 .withPageable(PageRequest.of(page, size))
                 .build();
 
         SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
 
-        return searchHits.stream()
+        return searchHits.getSearchHits().stream()
                 .map(SearchHit::getContent)
                 .toList();
     }
@@ -128,7 +128,7 @@ public class NewsRepositoryImpl implements NewsRepository {
 
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(termsQuery)
-                .withPageable(PageRequest.of(page - 1, size))
+                .withPageable(PageRequest.of(page, size))
                 .build();
 
         SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
@@ -163,6 +163,9 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     @Override
     public List<String> getSuggestions(String query) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
 
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
                 .query(query)
@@ -179,11 +182,13 @@ public class NewsRepositoryImpl implements NewsRepository {
                 .withPageable(PageRequest.of(0, 5))
                 .build();
 
-        SearchHits<NewsDocument> searchHits =
-                operations.search(nativeQuery, NewsDocument.class);
+        SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
 
         return searchHits.getSearchHits().stream()
-                .map(hit -> hit.getContent().getContent().getTitle())
+                .map(hit -> {
+                    NewsDocument newsDocument = hit.getContent();
+                    return newsDocument.getContent().getTitle();
+                })
                 .toList();
     }
 }
