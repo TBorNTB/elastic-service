@@ -189,4 +189,37 @@ public class NewsRepositoryImpl implements NewsRepository {
                 })
                 .toList();
     }
+
+    @Override
+    public PageResponse<NewsDocument> searchByMemberName(String name, int size, int page) {
+        Query boolQuery = BoolQuery.of(b -> b
+                .should(
+                        TermQuery.of(t -> t.field("writer.nickname").value(name))._toQuery(),
+                        TermQuery.of(t -> t.field("writer.realname").value(name))._toQuery(),
+                        TermQuery.of(t -> t.field("participants.nickname").value(name))._toQuery(),
+                        TermQuery.of(t -> t.field("participants.realname").value(name))._toQuery()
+                )
+                .minimumShouldMatch("1")
+        )._toQuery();
+
+        NativeQuery nativeQuery = NativeQuery.builder()
+                .withQuery(boolQuery)
+                .withSort(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .withPageable(PageRequest.of(page, size))
+                .build();
+
+        SearchHits<NewsDocument> searchHits = operations.search(nativeQuery, NewsDocument.class);
+
+        SearchPage<NewsDocument> searchPage = SearchHitSupport.searchPageFor(searchHits, PageRequest.of(page, size));
+
+        return new PageResponse<>(
+                searchPage.getContent().stream()
+                        .map(SearchHit::getContent)
+                        .toList(),
+                searchPage.getNumber(),
+                searchPage.getSize(),
+                searchPage.getTotalElements(),
+                searchPage.getTotalPages()
+        );
+    }
 }

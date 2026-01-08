@@ -16,4 +16,6 @@ public interface NewsRepository {
     void updateViewCount(Long newsId, Long viewCount);
 
     List<String> getSuggestions(String query);
+
+    PageResponse<NewsDocument> searchByMemberName(String name, int size, int page);
 }
