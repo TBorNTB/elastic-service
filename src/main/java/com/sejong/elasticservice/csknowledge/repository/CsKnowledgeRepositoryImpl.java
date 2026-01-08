@@ -1,15 +1,16 @@
 package com.sejong.elasticservice.csknowledge.repository;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
+import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeEvent;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
@@ -38,8 +39,32 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
     }
 
     @Override
-    public List<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, int page, int size) {
+    public List<String> getSuggestions(String query) {
         Query multiMatchQuery = MultiMatchQuery.of(m -> m
+                .query(query)
+                .type(TextQueryType.BoolPrefix)
+                .fields("title.auto_complete", "title.auto_complete._2gram",
+                        "title.auto_complete._3gram"))._toQuery();
+
+        NativeQuery nativeQuery = NativeQuery.builder()
+                .withQuery(multiMatchQuery)
+                .withPageable(PageRequest.of(0, 5))
+                .build();
+
+        SearchHits<CsKnowledgeDocument> searchHits = operations.search(nativeQuery, CsKnowledgeDocument.class);
+        return searchHits.getSearchHits().stream()
+                .map(hit -> {
+                    CsKnowledgeDocument csKnowledgeDocument = hit.getContent();
+                    return csKnowledgeDocument.getTitle();
+                })
+                .toList();
+    }
+
+    @Override
+    public PageResponse<CsKnowledgeDocument> searchCsKnowledge(String keyword, String category, PostSortType sortType, int page, int size) {
+        Query textQuery = (keyword == null || keyword.isBlank())
+                ? MatchAllQuery.of(m -> m)._toQuery()
+                : MultiMatchQuery.of(m -> m
                 .query(keyword)
                 .fields("title^3", "content^2", "category^1")
                 .fuzziness("AUTO")
@@ -57,19 +82,33 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
 
         // bool query 조합
         Query boolQuery = BoolQuery.of(b -> b
-                .must(multiMatchQuery)
+                .must(textQuery)
                 .filter(filters)
         )._toQuery();
 
+        Sort sort = switch (sortType) {
+            case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
+            case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
+        };
+
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
-                .withPageable(PageRequest.of(page - 1, size))
+                .withSort(sort)
+                .withPageable(PageRequest.of(page, size))
                 .build();
 
         SearchHits<CsKnowledgeDocument> searchHits = operations.search(nativeQuery, CsKnowledgeDocument.class);
-        return searchHits.getSearchHits().stream()
-                .map(SearchHit::getContent)
-                .toList();
+        SearchPage<CsKnowledgeDocument> searchPage = SearchHitSupport.searchPageFor(searchHits, PageRequest.of(page, size));
+
+        return new PageResponse<>(
+                searchPage.getContent().stream()
+                        .map(SearchHit::getContent)
+                        .toList(),
+                searchPage.getNumber(),
+                searchPage.getSize(),
+                searchPage.getTotalElements(),
+                searchPage.getTotalPages()
+        );
     }
 
     @Override

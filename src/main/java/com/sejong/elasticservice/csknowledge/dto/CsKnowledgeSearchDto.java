@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CsKnowledgeSearchDto {
-    private String id;
+    private Long id;
     private String title;
     private String content;
     private String category;
@@ -21,7 +21,7 @@ public class CsKnowledgeSearchDto {
 
     public static CsKnowledgeSearchDto toCsKnowledgeSearchDto(CsKnowledgeDocument document) {
         return CsKnowledgeSearchDto.builder()
-                .id(document.getId())
+                .id(Long.parseLong(document.getId()))
                 .title(document.getTitle())
                 .content(document.getContent())
                 .category(document.getCategory())

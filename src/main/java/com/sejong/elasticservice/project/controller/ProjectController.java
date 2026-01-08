@@ -1,17 +1,14 @@
 package com.sejong.elasticservice.project.controller;
 
 import com.sejong.elasticservice.common.pagenation.PageResponse;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import com.sejong.elasticservice.project.service.ProjectService;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,13 +36,13 @@ public class ProjectController {
             @RequestParam ProjectStatus projectStatus,
             @RequestParam(defaultValue = "") List<String> categories,
             @RequestParam(defaultValue = "") List<String> techStacks,
-            @RequestParam(defaultValue = "LATEST") ProjectSortType projectSortType, // 최신순, 인기순, 이름순
+            @RequestParam(defaultValue = "LATEST") PostSortType postSortType, // 최신순, 인기순, 이름순
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "0") int page
     ) {
 
         PageResponse<ProjectSearchDto> response = projectService.searchProjects(
-                query, projectStatus, categories, techStacks, projectSortType, size, page
+                query, projectStatus, categories, techStacks, postSortType, size, page
         );
         return ResponseEntity.ok(response);
     }
@@ -59,4 +56,12 @@ public class ProjectController {
         List<ProjectSearchDto> response = projectService.searchProjects(size, page);
         return ResponseEntity.ok(response);
     }
+
+//    @GetMapping("/search/latest/{username}")
+//    @Operation(summary = "특정 유저의 최근 파일 조회")
+//    public ResponseEntity<PageResponse<ProjectSearchDto>> searchUsersProject(
+//            @PathVariable String username
+//    ){
+//
+//    }
 }

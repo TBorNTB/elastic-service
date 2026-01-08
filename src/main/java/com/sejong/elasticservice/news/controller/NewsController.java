@@ -3,7 +3,7 @@ package com.sejong.elasticservice.news.controller;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.news.dto.NewsSearchDto;
 import com.sejong.elasticservice.news.service.NewsService;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +24,13 @@ public class NewsController {
     @GetMapping("/search")
     @Operation(summary = "뉴스 검색 (키워드 + 카테고리 필터)")
     public ResponseEntity<PageResponse<NewsSearchDto>> searchNews(
-            @RequestParam String keyword,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
-            @RequestParam(defaultValue = "LATEST") ProjectSortType projectSortType, // 최신순, 인기순, 이름순
+            @RequestParam(defaultValue = "LATEST") PostSortType postSortType, // 최신순, 인기순, 이름순
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        PageResponse<NewsSearchDto> response = newsService.searchNews(keyword, category, projectSortType, page, size);
+        PageResponse<NewsSearchDto> response = newsService.searchNews(keyword, category, postSortType, page, size);
         return ResponseEntity.ok(response);
     }
 

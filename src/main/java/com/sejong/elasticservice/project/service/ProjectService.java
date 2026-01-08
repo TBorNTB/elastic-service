@@ -2,7 +2,7 @@ package com.sejong.elasticservice.project.service;
 
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.project.domain.ProjectDocument;
-import com.sejong.elasticservice.project.domain.ProjectSortType;
+import com.sejong.elasticservice.project.domain.PostSortType;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import com.sejong.elasticservice.project.dto.ProjectSearchDto;
 import com.sejong.elasticservice.project.repository.ProjectRepository;
@@ -26,7 +26,7 @@ public class ProjectService {
             ProjectStatus projectStatus,
             List<String> categories,
             List<String> techStacks,
-            ProjectSortType projectSortType,
+            PostSortType postSortType,
             int size,
             int page
     ) {
@@ -37,7 +37,7 @@ public class ProjectService {
                         projectStatus,
                         categories,
                         techStacks,
-                        projectSortType,
+                        postSortType,
                         size,
                         page
                 );

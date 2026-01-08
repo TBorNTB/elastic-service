@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DocumentSearchDto {
-    private String id;
+    private Long id;
     private String yorkieDocumentId;
     private String title;
     private String content;
@@ -22,7 +22,7 @@ public class DocumentSearchDto {
 
     public static DocumentSearchDto toDocumentSearchDto(DocumentDocument document) {
         return DocumentSearchDto.builder()
-                .id(document.getId())
+                .id(Long.parseLong(document.getId()))
                 .yorkieDocumentId(document.getYorkieDocumentId())
                 .title(document.getTitle())
                 .content(document.getContent())

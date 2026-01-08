@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectSearchDto {
-    private String id;
+    private Long id;
     private String title;
     private String description;
     private String thumbnailUrl;
@@ -28,7 +28,7 @@ public class ProjectSearchDto {
 
     public static ProjectSearchDto from(ProjectDocument document) {
         return ProjectSearchDto.builder()
-                .id(document.getId())
+                .id(Long.parseLong(document.getId()))
                 .title(document.getTitle())
                 .description(document.getDescription())
                 .thumbnailUrl(document.getThumbnailUrl())
