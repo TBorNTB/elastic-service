@@ -57,11 +57,14 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/search/latest/{username}")
-//    @Operation(summary = "특정 유저의 최근 파일 조회")
-//    public ResponseEntity<PageResponse<ProjectSearchDto>> searchUsersProject(
-//            @PathVariable String username
-//    ){
-//
-//    }
+    @GetMapping("/search/member")
+    @Operation(summary = "nickname 또는 realname으로 프로젝트 검색", description = "owner 또는 collaborators의 nickname/realname으로 프로젝트를 검색합니다.")
+    public ResponseEntity<PageResponse<ProjectSearchDto>> searchByMemberName(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        PageResponse<ProjectSearchDto> response = projectService.searchByMemberName(name, size, page);
+        return ResponseEntity.ok(response);
+    }
 }
