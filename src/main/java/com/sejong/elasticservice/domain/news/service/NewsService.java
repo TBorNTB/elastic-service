@@ -45,4 +45,21 @@ public class NewsService {
     public List<String> getSuggestions(String query) {
         return newsRepository.getSuggestions(query);
     }
+
+    public PageResponse<NewsSearchDto> searchByMemberName(String name, int size, int page) {
+        PageResponse<NewsDocument> result = newsRepository.searchByMemberName(name, size, page);
+
+        List<NewsSearchDto> dtoList = result.content()
+                .stream()
+                .map(NewsSearchDto::toNewsSearchDto)
+                .toList();
+
+        return new PageResponse<>(
+                dtoList,
+                result.page(),
+                result.size(),
+                result.totalElements(),
+                result.totalPages()
+        );
+    }
 }

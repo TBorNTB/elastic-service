@@ -65,4 +65,14 @@ public class NewsController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/search/member")
+    @Operation(summary = "nickname 또는 realname으로 뉴스 검색", description = "writer 또는 participants의 nickname/realname으로 뉴스를 검색합니다.")
+    public ResponseEntity<PageResponse<NewsSearchDto>> searchByMemberName(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        PageResponse<NewsSearchDto> response = newsService.searchByMemberName(name, size, page);
+        return ResponseEntity.ok(response);
+    }
 }
