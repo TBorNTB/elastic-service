@@ -29,8 +29,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public String save(ProjectEvent project) {
-        ProjectDocument projectDocument = ProjectDocument.from(project);
+    public String save(ProjectDocument projectDocument) {
         ProjectDocument savedProjectDocument = repository.save(projectDocument);
         return savedProjectDocument.getId();
     }

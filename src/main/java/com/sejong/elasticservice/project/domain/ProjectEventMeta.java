@@ -13,16 +13,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectIndexEvent {
+public class ProjectEventMeta {
+
     private String aggregatedId;
     private Type type;
     private long occurredAt;
     private ProjectEvent projectEvent;
 
-    public static ProjectIndexEvent fromJson(String message) {
+    public static ProjectEventMeta fromJson(String message) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(message, ProjectIndexEvent.class);
+            return objectMapper.readValue(message, ProjectEventMeta.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("JSON 파싱 실패");
         }

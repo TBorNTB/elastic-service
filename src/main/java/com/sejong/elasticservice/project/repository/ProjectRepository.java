@@ -9,7 +9,7 @@ import com.sejong.elasticservice.project.domain.ProjectStatus;
 import java.util.List;
 
 public interface ProjectRepository {
-    String save(ProjectEvent savedProject);
+    String save(ProjectDocument projectDocument);
 
     void deleteById(String projectId);
 
