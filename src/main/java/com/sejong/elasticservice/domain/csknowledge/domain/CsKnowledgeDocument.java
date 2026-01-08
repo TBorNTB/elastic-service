@@ -1,6 +1,7 @@
 package com.sejong.elasticservice.domain.csknowledge.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sejong.elasticservice.common.embedded.Names;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
@@ -26,8 +27,8 @@ public class CsKnowledgeDocument {
     @Field(type = FieldType.Text, analyzer = "cs-knowledge_content_analyzer")
     private String content;
 
-    @Field(type = FieldType.Keyword)
-    private String writerId;
+    @Field(type = FieldType.Object)
+    private Names writer;
 
     @MultiField(
             mainField = @Field(type = FieldType.Text, analyzer = "cs-knowledge_category_analyzer"),
@@ -47,10 +48,10 @@ public class CsKnowledgeDocument {
     @Field(type = FieldType.Long)
     private long viewCount = 0L;
 
-    public static CsKnowledgeDocument from(CsKnowledgeEvent csKnowledgeEvent) {
+    public static CsKnowledgeDocument from(CsKnowledgeEvent csKnowledgeEvent, Names writer) {
         return CsKnowledgeDocument.builder()
                 .id(csKnowledgeEvent.getId())
-                .writerId(csKnowledgeEvent.getWriterId())
+                .writer(writer)
                 .title(csKnowledgeEvent.getTitle())
                 .content(csKnowledgeEvent.getContent())
                 .category(csKnowledgeEvent.getCategory())

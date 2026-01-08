@@ -35,4 +35,21 @@ public class CsKnowledgeService {
     public List<String> getSuggestions(String query) {
         return csKnowledgeRepository.getSuggestions(query);
     }
+
+    public PageResponse<CsKnowledgeSearchDto> searchByMemberName(String name, int size, int page) {
+        PageResponse<CsKnowledgeDocument> result = csKnowledgeRepository.searchByMemberName(name, size, page);
+
+        List<CsKnowledgeSearchDto> dtoList = result.content()
+                .stream()
+                .map(CsKnowledgeSearchDto::toCsKnowledgeSearchDto)
+                .toList();
+
+        return new PageResponse<>(
+                dtoList,
+                result.page(),
+                result.size(),
+                result.totalElements(),
+                result.totalPages()
+        );
+    }
 }

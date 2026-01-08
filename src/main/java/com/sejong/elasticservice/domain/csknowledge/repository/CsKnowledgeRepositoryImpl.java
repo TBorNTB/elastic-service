@@ -3,7 +3,6 @@ package com.sejong.elasticservice.domain.csknowledge.repository;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
-import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeEvent;
 import com.sejong.elasticservice.domain.project.domain.PostSortType;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +21,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
 
-    private final CsKnowledgeDocumentRepository repository;
     private final ElasticsearchOperations operations;
     private final String INDEX_NAME = "cs-knowledge";
 
     @Override
-    public String save(CsKnowledgeEvent csKnowledgeEvent) {
-        CsKnowledgeDocument document = CsKnowledgeDocument.from(csKnowledgeEvent);
-        CsKnowledgeDocument saved = operations.save(document, IndexCoordinates.of(INDEX_NAME));
+    public String save(CsKnowledgeDocument csKnowledgeDocument) {
+        CsKnowledgeDocument saved = operations.save(csKnowledgeDocument, IndexCoordinates.of(INDEX_NAME));
         return saved.getId();
     }
 
@@ -127,11 +124,42 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
     public void updateViewCount(Long csKnowledgeId, Long viewCount) {
         Document document = Document.create();
         document.put("viewCount", viewCount);
-        
+
         UpdateQuery updateQuery = UpdateQuery.builder(String.valueOf(csKnowledgeId))
                 .withDocument(document)
                 .build();
-        
+
         operations.update(updateQuery, IndexCoordinates.of(INDEX_NAME));
+    }
+
+    @Override
+    public PageResponse<CsKnowledgeDocument> searchByMemberName(String name, int size, int page) {
+        Query boolQuery = BoolQuery.of(b -> b
+                .should(
+                        TermQuery.of(t -> t.field("writer.nickname").value(name))._toQuery(),
+                        TermQuery.of(t -> t.field("writer.realname").value(name))._toQuery()
+                )
+                .minimumShouldMatch("1")
+        )._toQuery();
+
+        NativeQuery nativeQuery = NativeQuery.builder()
+                .withQuery(boolQuery)
+                .withSort(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .withPageable(PageRequest.of(page, size))
+                .build();
+
+        SearchHits<CsKnowledgeDocument> searchHits = operations.search(nativeQuery, CsKnowledgeDocument.class);
+
+        SearchPage<CsKnowledgeDocument> searchPage = SearchHitSupport.searchPageFor(searchHits, PageRequest.of(page, size));
+
+        return new PageResponse<>(
+                searchPage.getContent().stream()
+                        .map(SearchHit::getContent)
+                        .toList(),
+                searchPage.getNumber(),
+                searchPage.getSize(),
+                searchPage.getTotalElements(),
+                searchPage.getTotalPages()
+        );
     }
 }

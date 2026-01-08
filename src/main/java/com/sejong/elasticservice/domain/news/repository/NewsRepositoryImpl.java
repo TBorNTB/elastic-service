@@ -24,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NewsRepositoryImpl implements NewsRepository {
 
-    private final NewsDocumentRepository repository;
     private final ElasticsearchOperations operations;
     private final String INDEX_NAME = "news";
 
