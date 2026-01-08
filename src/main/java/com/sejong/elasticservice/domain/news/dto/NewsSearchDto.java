@@ -1,5 +1,6 @@
 package com.sejong.elasticservice.domain.news.dto;
 
+import com.sejong.elasticservice.common.embedded.Names;
 import com.sejong.elasticservice.domain.news.domain.Content;
 import com.sejong.elasticservice.domain.news.domain.NewsDocument;
 import lombok.AllArgsConstructor;
@@ -25,18 +26,18 @@ public class NewsSearchDto {
     private long likeCount;
     private long viewCount;
 
-    public static NewsSearchDto toNewsSearchDto(NewsDocument document) {
+    public static NewsSearchDto toNewsSearchDto(NewsDocument nd) {
         return NewsSearchDto.builder()
-                .id(Long.parseLong(document.getId()))
-                .content(document.getContent())
-                .thumbnailPath(document.getThumbnailPath())
-                .writerId(document.getWriterId())
-                .participantIds(document.getParticipantIds())
-                .tags(document.getTags())
-                .createdAt(document.getCreatedAt())
-                .updatedAt(document.getUpdatedAt())
-                .likeCount(document.getLikeCount())
-                .viewCount(document.getViewCount())
+                .id(Long.parseLong(nd.getId()))
+                .content(nd.getContent())
+                .thumbnailPath(nd.getThumbnailPath())
+                .writerId(nd.getWriter().getNickname())
+                .participantIds(nd.getParticipants().stream().map(Names::getNickname).toList())
+                .tags(nd.getTags())
+                .createdAt(nd.getCreatedAt())
+                .updatedAt(nd.getUpdatedAt())
+                .likeCount(nd.getLikeCount())
+                .viewCount(nd.getViewCount())
                 .build();
     }
 }
