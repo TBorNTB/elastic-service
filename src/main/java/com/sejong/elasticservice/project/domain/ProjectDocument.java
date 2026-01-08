@@ -2,9 +2,12 @@ package com.sejong.elasticservice.project.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sejong.elasticservice.client.response.UserNameInfo;
 import com.sejong.elasticservice.common.vo.Names;
 import com.sejong.elasticservice.project.domain.ProjectEvent;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
+import java.util.Map;
+import java.util.Map.Entry;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
@@ -67,37 +70,25 @@ public class ProjectDocument {
     @Field(type = FieldType.Long)
     private long viewCount = 0L;
 
-    public static ProjectDocument from(ProjectEvent project){
-        return ProjectDocument.builder()
-                .id(project.getId())
-                .title(project.getTitle())
-                .description(project.getDescription())
-                .thumbnailUrl(project.getThumbnailUrl())
-                .projectStatus(project.getProjectStatus())
-                .createdAt(project.getCreatedAt())
-                .updatedAt(project.getUpdatedAt())
-                .projectCategories(project.getProjectCategories())
-                .projectTechStacks(project.getProjectTechStacks())
-                .collaborators(project.getCollaborators())
-                .likeCount(project.getLikeCount())
-                .viewCount(project.getViewCount())
-                .build();
-    }
+    public static ProjectDocument from(ProjectEvent pe, Map<String, UserNameInfo> userNameInfos){
+        List<Names> names = new ArrayList<>();
+        for (Entry<String, UserNameInfo> e: userNameInfos.entrySet()) {
+            names.add(new Names(e.getKey(), e.getValue().nickname(), e.getValue().nickname()));
+        }
 
-    public ProjectEvent toDocument(){
-        return ProjectEvent.builder()
-                .id(id)
-                .title(title)
-                .description(description)
-                .projectStatus(projectStatus)
-                .thumbnailUrl(thumbnailUrl)
-                .createdAt(createdAt)
-                .updatedAt(updatedAt)                 // (기존 createdAt -> updatedAt으로 수정 권장)
-                .projectCategories(projectCategories)
-                .projectTechStacks(projectTechStacks)
-                .collaborators(collaborators)
-                .likeCount(likeCount)
-                .viewCount(viewCount)
+        return ProjectDocument.builder()
+                .id(pe.getId())
+                .title(pe.getTitle())
+                .description(pe.getDescription())
+                .thumbnailUrl(pe.getThumbnailUrl())
+                .projectStatus(pe.getProjectStatus())
+                .createdAt(pe.getCreatedAt())
+                .updatedAt(pe.getUpdatedAt())
+                .projectCategories(pe.getProjectCategories())
+                .projectTechStacks(pe.getProjectTechStacks())
+                .collaborators(names)
+                .likeCount(pe.getLikeCount())
+                .viewCount(pe.getViewCount())
                 .build();
     }
 }
