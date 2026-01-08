@@ -32,6 +32,8 @@ public class ProjectEvent {
     @Builder.Default
     private List<String> projectTechStacks = new ArrayList<>();
 
+    private String username;
+
     @Builder.Default
     private List<String> collaborators = new ArrayList<>();
 

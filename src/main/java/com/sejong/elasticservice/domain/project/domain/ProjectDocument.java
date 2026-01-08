@@ -3,7 +3,7 @@ package com.sejong.elasticservice.domain.project.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sejong.elasticservice.client.response.UserNameInfo;
-import com.sejong.elasticservice.common.vo.Names;
+import com.sejong.elasticservice.common.embedded.Names;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.*;
@@ -57,6 +57,9 @@ public class ProjectDocument {
     private List<String> projectTechStacks = new ArrayList<>();
 
     @Field(type = FieldType.Object)
+    private Names owner;
+
+    @Field(type = FieldType.Object)
     private List<Names> collaborators = new ArrayList<>();
 
     // ✅ 카운터 기본 0
@@ -68,12 +71,7 @@ public class ProjectDocument {
     @Field(type = FieldType.Long)
     private long viewCount = 0L;
 
-    public static ProjectDocument from(ProjectEvent pe, Map<String, UserNameInfo> userNameInfos){
-        List<Names> names = new ArrayList<>();
-        for (Entry<String, UserNameInfo> e: userNameInfos.entrySet()) {
-            names.add(new Names(e.getKey(), e.getValue().nickname(), e.getValue().nickname()));
-        }
-
+    public static ProjectDocument from(ProjectEvent pe, Names owner, List<Names> collaborators){
         return ProjectDocument.builder()
                 .id(pe.getId())
                 .title(pe.getTitle())
@@ -84,7 +82,8 @@ public class ProjectDocument {
                 .updatedAt(pe.getUpdatedAt())
                 .projectCategories(pe.getProjectCategories())
                 .projectTechStacks(pe.getProjectTechStacks())
-                .collaborators(names)
+                .owner(owner)
+                .collaborators(collaborators)
                 .likeCount(pe.getLikeCount())
                 .viewCount(pe.getViewCount())
                 .build();
