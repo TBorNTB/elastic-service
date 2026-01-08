@@ -2,6 +2,7 @@ package com.sejong.elasticservice.project.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sejong.elasticservice.common.vo.Names;
 import com.sejong.elasticservice.project.domain.ProjectEvent;
 import com.sejong.elasticservice.project.domain.ProjectStatus;
 import lombok.*;
@@ -54,8 +55,8 @@ public class ProjectDocument {
     @Field(type = FieldType.Keyword)
     private List<String> projectTechStacks = new ArrayList<>();
 
-    @Field(type = FieldType.Keyword)
-    private List<String> collaborators = new ArrayList<>();
+    @Field(type = FieldType.Object)
+    private List<Names> collaborators = new ArrayList<>();
 
     // ✅ 카운터 기본 0
     @Builder.Default
