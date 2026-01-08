@@ -59,4 +59,21 @@ public class ProjectService {
         List<ProjectDocument> projectDocuments = projectElasticRepository.searchProjects(size, page);
         return projectDocuments.stream().map(ProjectSearchDto::from).toList();
     }
+
+    public PageResponse<ProjectSearchDto> searchByMemberName(String name, int size, int page) {
+        PageResponse<ProjectDocument> result = projectElasticRepository.searchByMemberName(name, size, page);
+
+        List<ProjectSearchDto> dtoList = result.content()
+                .stream()
+                .map(ProjectSearchDto::from)
+                .toList();
+
+        return new PageResponse<>(
+                dtoList,
+                result.page(),
+                result.size(),
+                result.totalElements(),
+                result.totalPages()
+        );
+    }
 }
