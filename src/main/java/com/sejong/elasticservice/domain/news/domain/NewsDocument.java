@@ -1,6 +1,7 @@
 package com.sejong.elasticservice.domain.news.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sejong.elasticservice.common.embedded.Names;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
@@ -25,11 +26,11 @@ public class NewsDocument {
     @Field(type = FieldType.Keyword)
     private String thumbnailPath;
 
-    @Field(type = FieldType.Keyword)
-    private String writerId;
+    @Field(type = FieldType.Object)
+    private Names writer;
 
-    @Field(type = FieldType.Keyword)
-    private List<String> participantIds = new ArrayList<>();
+    @Field(type = FieldType.Object)
+    private List<Names> participants = new ArrayList<>();
 
     @Field(type = FieldType.Keyword)
     private List<String> tags = new ArrayList<>();
@@ -50,13 +51,13 @@ public class NewsDocument {
     @Field(type = FieldType.Long)
     private long viewCount = 0L;
 
-    public static NewsDocument from(NewsEvent newsEvent) {
+    public static NewsDocument from(NewsEvent newsEvent, Names writer, List<Names> participants) {
         return NewsDocument.builder()
                 .id(newsEvent.getId())
                 .content(newsEvent.getContent())
                 .thumbnailPath(newsEvent.getThumbnailPath())
-                .writerId(newsEvent.getWriterId())
-                .participantIds(newsEvent.getParticipantIds())
+                .writer(writer)
+                .participants(participants)
                 .tags(newsEvent.getTags())
                 .createdAt(newsEvent.getCreatedAt())
                 .updatedAt(newsEvent.getUpdatedAt())

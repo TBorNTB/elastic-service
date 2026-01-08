@@ -4,7 +4,6 @@ import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.domain.news.domain.NewsDocument;
-import com.sejong.elasticservice.domain.news.domain.NewsEvent;
 
 import java.util.ArrayList;
 
@@ -30,9 +29,8 @@ public class NewsRepositoryImpl implements NewsRepository {
     private final String INDEX_NAME = "news";
 
     @Override
-    public String save(NewsEvent newsEvent) {
-        NewsDocument document = NewsDocument.from(newsEvent);
-        NewsDocument saved = operations.save(document, IndexCoordinates.of(INDEX_NAME));
+    public String save(NewsDocument newsDocument) {
+        NewsDocument saved = operations.save(newsDocument, IndexCoordinates.of(INDEX_NAME));
         return saved.getId();
     }
 

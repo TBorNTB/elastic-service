@@ -12,16 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NewsIndexEvent {
+public class NewsEventMeta {
     private String aggregatedId;
     private Type type;
     private long occurredAt;
     private NewsEvent newsEvent;
 
-    public static NewsIndexEvent fromJson(String message) {
+    public static NewsEventMeta fromJson(String message) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(message, NewsIndexEvent.class);
+            return objectMapper.readValue(message, NewsEventMeta.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("JSON 파싱 실패");
         }
