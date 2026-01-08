@@ -22,5 +22,5 @@ public interface ProjectRepository {
 
     void updateViewCount(Long postId, Long viewCount);
 
-
+    PageResponse<ProjectDocument> searchByMemberName(String name, int size, int page);
 }

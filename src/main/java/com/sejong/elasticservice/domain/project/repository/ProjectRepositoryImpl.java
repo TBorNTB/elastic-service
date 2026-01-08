@@ -175,4 +175,39 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         elasticsearchOperations.update(uq, index);
     }
 
+    @Override
+    public PageResponse<ProjectDocument> searchByMemberName(String name, int size, int page) {
+        Query boolQuery = BoolQuery.of(b -> b
+                .should(
+                        TermQuery.of(t -> t.field("owner.nickname").value(name))._toQuery(),
+                        TermQuery.of(t -> t.field("owner.realname").value(name))._toQuery(),
+                        TermQuery.of(t -> t.field("collaborators.nickname").value(name))._toQuery(),
+                        TermQuery.of(t -> t.field("collaborators.realname").value(name))._toQuery()
+                )
+                .minimumShouldMatch("1")
+        )._toQuery();
+
+        NativeQuery nativeQuery = NativeQuery.builder()
+                .withQuery(boolQuery)
+                .withSort(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .withPageable(PageRequest.of(page, size))
+                .build();
+
+        SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(
+                nativeQuery,
+                ProjectDocument.class
+        );
+
+        SearchPage<ProjectDocument> searchPage = SearchHitSupport.searchPageFor(searchHits, PageRequest.of(page, size));
+
+        return new PageResponse<>(
+                searchPage.getContent().stream()
+                        .map(SearchHit::getContent)
+                        .toList(),
+                searchPage.getNumber(),
+                searchPage.getSize(),
+                searchPage.getTotalElements(),
+                searchPage.getTotalPages()
+        );
+    }
 }
