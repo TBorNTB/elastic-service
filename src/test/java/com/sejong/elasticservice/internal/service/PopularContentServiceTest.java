@@ -1,5 +1,6 @@
 package com.sejong.elasticservice.internal.service;
 
+import com.sejong.elasticservice.common.embedded.Names;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.internal.dto.ContentResponse;
 import com.sejong.elasticservice.domain.internal.service.PopularContentService;
@@ -158,10 +159,16 @@ class PopularContentServiceTest {
                 .content("뉴스 내용: " + title)
                 .build();
 
+        Names writer = Names.builder()
+                .username("writer-" + id)
+                .nickname("닉네임-" + id)
+                .realname("실명-" + id)
+                .build();
+
         return NewsDocument.builder()
                 .id(id)
                 .content(content)
-                .writerId("writer-" + id)
+                .writer(writer)
                 .createdAt(createdAt.format(FORMATTER))
                 .updatedAt(createdAt.format(FORMATTER))
                 .likeCount(likeCount)
@@ -170,10 +177,17 @@ class PopularContentServiceTest {
     }
 
     private CsKnowledgeDocument createCsKnowledge(String id, String title, LocalDateTime createdAt, Long likeCount, Long viewCount) {
+        Names writer = Names.builder()
+                .username("writer-" + id)
+                .nickname("닉네임-" + id)
+                .realname("실명-" + id)
+                .build();
+
         return CsKnowledgeDocument.builder()
                 .id(id)
                 .title(title)
                 .content("CS 지식 내용: " + title)
+                .writer(writer)
                 .category("알고리즘")
                 .createdAt(createdAt.format(FORMATTER))
                 .likeCount(likeCount)
