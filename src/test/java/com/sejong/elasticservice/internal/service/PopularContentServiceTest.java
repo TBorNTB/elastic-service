@@ -1,11 +1,12 @@
 package com.sejong.elasticservice.internal.service;
 
-import com.sejong.elasticservice.csknowledge.domain.CsKnowledgeDocument;
-import com.sejong.elasticservice.internal.dto.ContentResponse;
-import com.sejong.elasticservice.news.domain.Content;
-import com.sejong.elasticservice.news.domain.NewsDocument;
-import com.sejong.elasticservice.project.domain.ProjectDocument;
-import com.sejong.elasticservice.project.domain.ProjectStatus;
+import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
+import com.sejong.elasticservice.domain.internal.dto.ContentResponse;
+import com.sejong.elasticservice.domain.internal.service.PopularContentService;
+import com.sejong.elasticservice.domain.news.domain.Content;
+import com.sejong.elasticservice.domain.news.domain.NewsDocument;
+import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
+import com.sejong.elasticservice.domain.project.domain.ProjectStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
