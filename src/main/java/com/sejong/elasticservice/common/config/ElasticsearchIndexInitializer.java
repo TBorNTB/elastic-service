@@ -17,36 +17,40 @@ public class ElasticsearchIndexInitializer {
     public ApplicationRunner createCsKnowledgeIndex(ElasticsearchOperations ops) {
         return args -> {
             IndexOperations indexOps = ops.indexOps(CsKnowledgeDocument.class);
-            if(!indexOps.exists()) {
-                indexOps.createWithMapping();
+            if(indexOps.exists()) {
+                indexOps.delete();
             }
+            indexOps.createWithMapping();
         };
     }
     @Bean
     public ApplicationRunner createProjectIndex(ElasticsearchOperations ops) {
         return args -> {
             IndexOperations indexOps = ops.indexOps(ProjectDocument.class);
-            if(!indexOps.exists()) {
-                indexOps.createWithMapping();
+            if(indexOps.exists()) {
+                indexOps.delete();
             }
+            indexOps.createWithMapping();
         };
     }
     @Bean
     public ApplicationRunner createNewsIndex(ElasticsearchOperations ops) {
         return args -> {
             IndexOperations indexOps = ops.indexOps(NewsDocument.class);
-            if(!indexOps.exists()) {
-                indexOps.createWithMapping();
+            if(indexOps.exists()) {
+                indexOps.delete();
             }
+            indexOps.createWithMapping();
         };
     }
     @Bean
     public ApplicationRunner createDocumentIndex(ElasticsearchOperations ops) {
         return args -> {
             IndexOperations indexOps = ops.indexOps(DocumentDocument.class);
-            if(!indexOps.exists()) {
-                indexOps.createWithMapping();
+            if(indexOps.exists()) {
+                indexOps.delete();
             }
+            indexOps.createWithMapping();
         };
     }
 }
