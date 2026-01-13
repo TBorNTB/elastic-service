@@ -31,7 +31,7 @@ public class DocumentController {
     @GetMapping("/search")
     @Operation(summary = "Document관련 elastic 내용물 전체 조회 => 현재 정렬 방식은 지원 안함")
     public ResponseEntity<List<DocumentSearchDto>> searchDocuments(
-            @RequestParam String query,
+            @RequestParam(required = false) String query,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "0") int page
     ) {

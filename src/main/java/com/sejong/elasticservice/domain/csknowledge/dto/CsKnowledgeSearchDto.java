@@ -1,5 +1,6 @@
 package com.sejong.elasticservice.domain.csknowledge.dto;
 
+import com.sejong.elasticservice.domain.UserInfo;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,8 @@ public class CsKnowledgeSearchDto {
     private String createdAt;
     private long likeCount;
     private long viewCount;
+    
+    private UserInfo writer;
 
     public static CsKnowledgeSearchDto toCsKnowledgeSearchDto(CsKnowledgeDocument document) {
         return CsKnowledgeSearchDto.builder()
@@ -28,6 +31,7 @@ public class CsKnowledgeSearchDto {
                 .createdAt(document.getCreatedAt())
                 .likeCount(document.getLikeCount())
                 .viewCount(document.getViewCount())
+                .writer(UserInfo.from(document.getWriter()))
                 .build();
     }
 }

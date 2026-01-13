@@ -71,10 +71,14 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 .fuzziness("AUTO")
         )._toQuery();
 
-        Query projectStatusFilter = TermQuery.of(t -> t
-                .field("projectStatus")
-                .value(projectStatus.name())
-        )._toQuery();
+        List<Query> filters = new ArrayList<>();
+        if (projectStatus != null) {
+            Query projectStatusFilter = TermQuery.of(t -> t
+                    .field("projectStatus")
+                    .value(projectStatus.name())
+            )._toQuery();
+            filters.add(projectStatusFilter);
+        }
 
         List<FieldValue> categoryValues = categories.stream()
                 .map(FieldValue::of)
@@ -93,11 +97,6 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 .field("projectTechStacks")
                 .terms(v -> v.value(techStackValues))
         )._toQuery();
-
-        List<Query> filters = new ArrayList<>();
-        if (projectStatus != null && !projectStatus.name().isBlank()) {
-            filters.add(projectStatusFilter);
-        }
         if (!categories.isEmpty()) filters.add(projectCategoriesFilter);
         if (!techStacks.isEmpty()) filters.add(projectTechStacksFilter);
 

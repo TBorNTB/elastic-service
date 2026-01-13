@@ -1,5 +1,6 @@
 package com.sejong.elasticservice.domain.project.dto;
 
+import com.sejong.elasticservice.domain.UserInfo;
 import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
 import com.sejong.elasticservice.domain.project.domain.ProjectStatus;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,9 @@ public class ProjectSearchDto {
     private String updatedAt;
     private long likeCount;
     private long viewCount;
+    
+    private UserInfo owner;
+    private List<UserInfo> collaborators;
 
     public static ProjectSearchDto from(ProjectDocument document) {
         return ProjectSearchDto.builder()
@@ -39,6 +43,10 @@ public class ProjectSearchDto {
                 .updatedAt(document.getUpdatedAt())
                 .likeCount(document.getLikeCount())
                 .viewCount(document.getViewCount())
+                .owner(UserInfo.from(document.getOwner()))
+                .collaborators(document.getCollaborators() != null 
+                        ? document.getCollaborators().stream().map(UserInfo::from).toList() 
+                        : List.of())
                 .build();
     }
 }

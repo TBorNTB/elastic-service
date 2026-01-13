@@ -2,6 +2,7 @@ package com.sejong.elasticservice.domain.document.repository;
 
 
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchAllQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
@@ -57,14 +58,16 @@ public class DocumentRepositoryImpl implements DocumentRepository {
 
     @Override
     public List<DocumentDocument> searchDocuments(String query, int size, int page) {
-        Query multiMatchQuery = MultiMatchQuery.of(m -> m
+        Query textQuery = (query == null || query.isBlank())
+                ? MatchAllQuery.of(m -> m)._toQuery()
+                : MultiMatchQuery.of(m -> m
                 .query(query)
                 .fields("title^3", "description^2", "content")
                 .fuzziness("AUTO")
         )._toQuery();
 
         Query boolQuery = BoolQuery.of(b -> b
-                .must(multiMatchQuery)
+                .must(textQuery)
         )._toQuery();
 
         NativeQuery nativeQuery = NativeQuery.builder()
