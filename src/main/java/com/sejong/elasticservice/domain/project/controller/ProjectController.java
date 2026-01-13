@@ -32,8 +32,8 @@ public class ProjectController {
     @GetMapping("/search")
     @Operation(summary = "elastic 내용물 전체 조회 => 현재 정렬 방식은 지원 안함")
     public ResponseEntity<PageResponse<ProjectSearchDto>> searchProjects(
-            @RequestParam String query,
-            @RequestParam ProjectStatus projectStatus,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) ProjectStatus projectStatus,
             @RequestParam(defaultValue = "") List<String> categories,
             @RequestParam(defaultValue = "") List<String> techStacks,
             @RequestParam(defaultValue = "LATEST") PostSortType postSortType, // 최신순, 인기순, 이름순
