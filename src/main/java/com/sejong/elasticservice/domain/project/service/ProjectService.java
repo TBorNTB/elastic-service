@@ -76,4 +76,21 @@ public class ProjectService {
                 result.totalPages()
         );
     }
+
+    public PageResponse<ProjectSearchDto> searchByUsername(String username, int size, int page) {
+        PageResponse<ProjectDocument> result = projectElasticRepository.searchByUsername(username, size, page);
+
+        List<ProjectSearchDto> dtoList = result.content()
+                .stream()
+                .map(ProjectSearchDto::from)
+                .toList();
+
+        return new PageResponse<>(
+                dtoList,
+                result.page(),
+                result.size(),
+                result.totalElements(),
+                result.totalPages()
+        );
+    }
 }

@@ -13,4 +13,6 @@ public interface CsKnowledgeRepository {
     void updateLikeCount(Long csKnowledgeId, Long likeCount);
     void updateViewCount(Long csKnowledgeId, Long viewCount);
     PageResponse<CsKnowledgeDocument> searchByMemberName(String name, int size, int page);
+
+    PageResponse<CsKnowledgeDocument> searchByUsername(String username, int size, int page);
 }

@@ -67,4 +67,15 @@ public class ProjectController {
         PageResponse<ProjectSearchDto> response = projectService.searchByMemberName(name, size, page);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/user/{username}")
+    @Operation(summary = "username으로 프로젝트 검색", description = "owner 또는 collaborators의 username으로 프로젝트를 검색합니다.")
+    public ResponseEntity<PageResponse<ProjectSearchDto>> searchByUsername(
+            @PathVariable String username,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        PageResponse<ProjectSearchDto> response = projectService.searchByUsername(username, size, page);
+        return ResponseEntity.ok(response);
+    }
 }

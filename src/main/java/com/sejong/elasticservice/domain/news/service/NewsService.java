@@ -62,4 +62,21 @@ public class NewsService {
                 result.totalPages()
         );
     }
+
+    public PageResponse<NewsSearchDto> searchByUsername(String username, int size, int page) {
+        PageResponse<NewsDocument> result = newsRepository.searchByUsername(username, size, page);
+
+        List<NewsSearchDto> dtoList = result.content()
+                .stream()
+                .map(NewsSearchDto::toNewsSearchDto)
+                .toList();
+
+        return new PageResponse<>(
+                dtoList,
+                result.page(),
+                result.size(),
+                result.totalElements(),
+                result.totalPages()
+        );
+    }
 }

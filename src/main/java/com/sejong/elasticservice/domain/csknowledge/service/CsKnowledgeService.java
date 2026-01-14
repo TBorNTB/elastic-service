@@ -52,4 +52,21 @@ public class CsKnowledgeService {
                 result.totalPages()
         );
     }
+
+    public PageResponse<CsKnowledgeSearchDto> searchByUsername(String username, int size, int page) {
+        PageResponse<CsKnowledgeDocument> result = csKnowledgeRepository.searchByUsername(username, size, page);
+
+        List<CsKnowledgeSearchDto> dtoList = result.content()
+                .stream()
+                .map(CsKnowledgeSearchDto::toCsKnowledgeSearchDto)
+                .toList();
+
+        return new PageResponse<>(
+                dtoList,
+                result.page(),
+                result.size(),
+                result.totalElements(),
+                result.totalPages()
+        );
+    }
 }

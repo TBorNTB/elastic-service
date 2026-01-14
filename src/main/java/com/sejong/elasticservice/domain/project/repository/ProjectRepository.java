@@ -23,4 +23,6 @@ public interface ProjectRepository {
     void updateViewCount(Long postId, Long viewCount);
 
     PageResponse<ProjectDocument> searchByMemberName(String name, int size, int page);
+
+    PageResponse<ProjectDocument> searchByUsername(String username, int size, int page);
 }

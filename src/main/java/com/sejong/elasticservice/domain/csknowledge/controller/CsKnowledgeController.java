@@ -53,4 +53,15 @@ public class CsKnowledgeController {
         PageResponse<CsKnowledgeSearchDto> response = csKnowledgeService.searchByMemberName(name, size, page);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/user/{username}")
+    @Operation(summary = "username으로 CS 지식 검색", description = "writer의 username으로 CS 지식을 검색합니다.")
+    public ResponseEntity<PageResponse<CsKnowledgeSearchDto>> searchByUsername(
+            @PathVariable String username,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        PageResponse<CsKnowledgeSearchDto> response = csKnowledgeService.searchByUsername(username, size, page);
+        return ResponseEntity.ok(response);
+    }
 }

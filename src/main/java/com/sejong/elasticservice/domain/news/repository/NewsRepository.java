@@ -18,4 +18,6 @@ public interface NewsRepository {
     List<String> getSuggestions(String query);
 
     PageResponse<NewsDocument> searchByMemberName(String name, int size, int page);
+
+    PageResponse<NewsDocument> searchByUsername(String username, int size, int page);
 }
