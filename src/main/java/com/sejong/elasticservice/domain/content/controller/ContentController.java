@@ -1,16 +1,17 @@
 package com.sejong.elasticservice.domain.content.controller;
 
 import com.sejong.elasticservice.common.pagenation.PageResponse;
+import com.sejong.elasticservice.domain.content.dto.PostRequest;
+import com.sejong.elasticservice.domain.content.dto.PostSummaryDto;
+import com.sejong.elasticservice.domain.content.service.ContentService;
 import com.sejong.elasticservice.domain.content.service.PopularContentService;
 import com.sejong.elasticservice.domain.internal.dto.ContentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContentController {
 
     private final PopularContentService popularContentService;
+    private final ContentService contentService;
 
     @GetMapping("/popular")
     @Operation(summary = "인기 게시글 조회 (Project, News, CS Knowledge 통합, 인기도순 정렬)")
@@ -37,6 +39,15 @@ public class ContentController {
             @RequestParam(defaultValue = "10") int size
     ) {
         PageResponse<ContentResponse> response = popularContentService.getUserLatestContents(username, page, size);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/posts")
+    @Operation(summary = "postType과 postId List로 여러 게시글 조회")
+    public ResponseEntity<List<PostSummaryDto>> getPostsByTypeAndIds(
+            @RequestBody PostRequest request
+    ) {
+        List<PostSummaryDto> response = contentService.getPostsByTypeAndIds(request);
         return ResponseEntity.ok(response);
     }
 }
