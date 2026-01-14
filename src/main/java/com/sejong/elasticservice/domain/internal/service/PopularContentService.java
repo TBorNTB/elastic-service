@@ -2,7 +2,9 @@ package com.sejong.elasticservice.domain.internal.service;
 
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchAllQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import com.sejong.elasticservice.common.pagenation.PageResponse;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.internal.dto.ContentResponse;
 import com.sejong.elasticservice.domain.news.domain.NewsDocument;
@@ -185,6 +187,146 @@ public class PopularContentService {
                     .toList();
         } catch (Exception e) {
             log.error("Error searching weekly cs knowledge", e);
+            return new ArrayList<>();
+        }
+    }
+
+    public PageResponse<ContentResponse> getPopularContents(int page, int size) {
+        List<ContentResponse> allContent = new ArrayList<>();
+
+        // Project 검색 - 인기도 순으로 정렬하여 최상위 3개만 가져오기
+        List<ProjectDocument> projects = searchPopularProjects(3);
+        projects.forEach(project ->
+            allContent.add(ContentResponse.fromProject(project))
+        );
+
+        // News 검색 - 인기도 순으로 정렬하여 최상위 3개만 가져오기
+        List<NewsDocument> news = searchPopularNews(3);
+        news.forEach(newsItem ->
+            allContent.add(ContentResponse.fromNews(newsItem))
+        );
+
+        // CsKnowledge 검색 - 인기도 순으로 정렬하여 최상위 3개만 가져오기
+        List<CsKnowledgeDocument> csKnowledges = searchPopularCsKnowledge(3);
+        csKnowledges.forEach(cs ->
+            allContent.add(ContentResponse.fromCsKnowledge(cs))
+        );
+
+        // 인기도 점수로 정렬 (내림차순)
+        List<ContentResponse> sortedContent = allContent.stream()
+                .sorted(Comparator.comparingDouble(ContentResponse::calculatePopularityScore).reversed())
+                .toList();
+
+        // 페이지네이션 적용
+        int start = page * size;
+        int end = Math.min(start + size, sortedContent.size());
+        List<ContentResponse> pagedContent = start < sortedContent.size()
+                ? sortedContent.subList(start, end)
+                : new ArrayList<>();
+
+        int totalPages = (int) Math.ceil((double) sortedContent.size() / size);
+
+        return new PageResponse<>(
+                pagedContent,
+                page,
+                size,
+                sortedContent.size(),
+                totalPages
+        );
+    }
+
+    private List<ProjectDocument> searchPopularProjects(int size) {
+        try {
+            Query matchAllQuery = MatchAllQuery.of(m -> m)._toQuery();
+
+            // Elasticsearch의 Script Sort를 사용하여 인기도 순으로 정렬
+            SortOptions scriptSort = SortOptions.of(s -> s
+                    .script(sc -> sc
+                            .script(script -> script
+                                    .source("doc['likeCount'].value * 2 + doc['viewCount'].value")
+                            )
+                            .order(SortOrder.Desc)
+                            .type(co.elastic.clients.elasticsearch._types.ScriptSortType.Number)
+                    )
+            );
+
+            NativeQuery searchQuery = NativeQuery.builder()
+                    .withQuery(matchAllQuery)
+                    .withSort(List.of(scriptSort))
+                    .withPageable(PageRequest.of(0, size))
+                    .build();
+
+            SearchHits<ProjectDocument> searchHits = elasticsearchOperations.search(searchQuery, ProjectDocument.class);
+
+            return searchHits.stream()
+                    .map(SearchHit::getContent)
+                    .toList();
+        } catch (Exception e) {
+            log.error("Error searching popular projects", e);
+            return new ArrayList<>();
+        }
+    }
+
+    private List<NewsDocument> searchPopularNews(int size) {
+        try {
+            Query matchAllQuery = MatchAllQuery.of(m -> m)._toQuery();
+
+            // Elasticsearch의 Script Sort를 사용하여 인기도 순으로 정렬
+            SortOptions scriptSort = SortOptions.of(s -> s
+                    .script(sc -> sc
+                            .script(script -> script
+                                    .source("doc['likeCount'].value * 2 + doc['viewCount'].value")
+                            )
+                            .order(SortOrder.Desc)
+                            .type(co.elastic.clients.elasticsearch._types.ScriptSortType.Number)
+                    )
+            );
+
+            NativeQuery searchQuery = NativeQuery.builder()
+                    .withQuery(matchAllQuery)
+                    .withSort(List.of(scriptSort))
+                    .withPageable(PageRequest.of(0, size))
+                    .build();
+
+            SearchHits<NewsDocument> searchHits = elasticsearchOperations.search(searchQuery, NewsDocument.class);
+
+            return searchHits.stream()
+                    .map(SearchHit::getContent)
+                    .toList();
+        } catch (Exception e) {
+            log.error("Error searching popular news", e);
+            return new ArrayList<>();
+        }
+    }
+
+    private List<CsKnowledgeDocument> searchPopularCsKnowledge(int size) {
+        try {
+            Query matchAllQuery = MatchAllQuery.of(m -> m)._toQuery();
+
+            // Elasticsearch의 Script Sort를 사용하여 인기도 순으로 정렬
+            SortOptions scriptSort = SortOptions.of(s -> s
+                    .script(sc -> sc
+                            .script(script -> script
+                                    .source("doc['likeCount'].value * 2 + doc['viewCount'].value")
+                            )
+                            .order(SortOrder.Desc)
+                            .type(co.elastic.clients.elasticsearch._types.ScriptSortType.Number)
+                    )
+            );
+
+            NativeQuery searchQuery = NativeQuery.builder()
+                    .withQuery(matchAllQuery)
+                    .withSort(List.of(scriptSort))
+                    .withPageable(PageRequest.of(0, size))
+                    .build();
+
+            SearchHits<CsKnowledgeDocument> searchHits = elasticsearchOperations.search(searchQuery, CsKnowledgeDocument.class);
+
+            return searchHits.stream()
+                    .map(SearchHit::getContent)
+                    .toList();
+        } catch (Exception e) {
+            log.error("Error searching popular cs knowledge", e);
             return new ArrayList<>();
         }
     }
