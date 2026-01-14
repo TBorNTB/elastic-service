@@ -79,8 +79,8 @@ public class ContentService {
         }
         
         // CSKNOWLEDGE 처리
-        if (groupedByType.containsKey(PostType.CSKNOWLEDGE)) {
-            List<String> csIds = groupedByType.get(PostType.CSKNOWLEDGE).stream()
+        if (groupedByType.containsKey(PostType.ARTICLE)) {
+            List<String> csIds = groupedByType.get(PostType.ARTICLE).stream()
                     .map(String::valueOf)
                     .toList();
             Iterable<CsKnowledgeDocument> documents = csKnowledgeRepository.findAllById(csIds);
@@ -89,7 +89,7 @@ public class ContentService {
             result.addAll(documentList.stream()
                     .map(doc -> PostSummaryDto.builder()
                             .postId(Long.parseLong(doc.getId()))
-                            .postType(PostType.CSKNOWLEDGE)
+                            .postType(PostType.ARTICLE)
                             .title(doc.getTitle())
                             .createdAt(doc.getCreatedAt())
                             .writer(UserInfo.from(doc.getWriter()))

@@ -4,5 +4,6 @@ public enum PostType {
     NEWS,
     PROJECT,
     DOCUMENT,
-    CSKNOWLEDGE;
+    CSKNOWLEDGE,
+    ARTICLE,
 }
