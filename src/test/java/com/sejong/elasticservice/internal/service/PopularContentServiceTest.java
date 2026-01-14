@@ -3,7 +3,7 @@ package com.sejong.elasticservice.internal.service;
 import com.sejong.elasticservice.common.embedded.Names;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.internal.dto.ContentResponse;
-import com.sejong.elasticservice.domain.internal.service.PopularContentService;
+import com.sejong.elasticservice.domain.content.service.PopularContentService;
 import com.sejong.elasticservice.domain.news.domain.Content;
 import com.sejong.elasticservice.domain.news.domain.NewsDocument;
 import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
