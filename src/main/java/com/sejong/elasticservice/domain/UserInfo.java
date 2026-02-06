@@ -14,6 +14,7 @@ public class UserInfo {
     private String username;
     private String nickname;
     private String realname;
+    private String profileImageUrl;
 
     public static UserInfo from(Names names) {
         if (names == null) {
@@ -23,6 +24,7 @@ public class UserInfo {
                 .username(names.getUsername())
                 .nickname(names.getNickname())
                 .realname(names.getRealname())
+                .profileImageUrl(names.getProfileImageUrl())
                 .build();
     }
 }
