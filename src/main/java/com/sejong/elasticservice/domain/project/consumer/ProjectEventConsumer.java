@@ -6,6 +6,7 @@ import com.sejong.elasticservice.client.service.UserExternalService;
 import com.sejong.elasticservice.common.constants.GroupNames;
 import com.sejong.elasticservice.common.constants.TopicNames;
 import com.sejong.elasticservice.common.embedded.Names;
+import com.sejong.elasticservice.domain.UserNameInfoService;
 import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
 import com.sejong.elasticservice.domain.project.domain.ProjectEventMeta;
 import com.sejong.elasticservice.common.constants.Type;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class ProjectEventConsumer {
 
     private final ProjectRepository repo;
-    private final UserExternalService userExternalService;
+    private final UserNameInfoService userNameInfoService;
 
     @KafkaListener(
             topics = TopicNames.PROJECT,
@@ -51,24 +52,15 @@ public class ProjectEventConsumer {
         usernames.add(ownerUsername);
         usernames.addAll(collaborators);
 
-        Map<String, UserNameInfo> infos = userExternalService.getUserNameInfos(usernames);
+        Map<String, UserNameInfo> infos = userNameInfoService.getUserNameInfos(usernames);
 
-        Names ownerNames = toNames(ownerUsername, infos);
+        Names ownerNames = userNameInfoService.toNames(ownerUsername, infos);
 
         List<Names> collaboratorNames = collaborators.stream()
-                .map(collaborator -> toNames(collaborator, infos))
+                .map(collaborator -> userNameInfoService.toNames(collaborator, infos))
                 .toList();
 
         return new Result(ownerNames, collaboratorNames);
-    }
-
-    private Names toNames(String username, Map<String, UserNameInfo> infos) {
-        UserNameInfo info = infos.get(username);
-        if (info == null) {
-            log.warn("User not found: {}", username);
-            return new Names(username, null, null);
-        }
-        return new Names(username, info.nickname(), info.realName());
     }
 
     private record Result(Names ownerNames, List<Names> collaboratorNames) {

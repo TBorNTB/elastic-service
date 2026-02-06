@@ -6,6 +6,7 @@ import com.sejong.elasticservice.common.constants.GroupNames;
 import com.sejong.elasticservice.common.constants.TopicNames;
 import com.sejong.elasticservice.common.constants.Type;
 import com.sejong.elasticservice.common.embedded.Names;
+import com.sejong.elasticservice.domain.UserNameInfoService;
 import com.sejong.elasticservice.domain.news.domain.NewsDocument;
 import com.sejong.elasticservice.domain.news.domain.NewsEvent;
 import com.sejong.elasticservice.domain.news.domain.NewsEventMeta;
@@ -25,7 +26,7 @@ import java.util.Map;
 public class NewsEventConsumer {
 
     private final NewsRepository repo;
-    private final UserExternalService userExternalService;
+    private final UserNameInfoService userNameInfoService;
 
     @KafkaListener(
             topics = TopicNames.NEWS,
@@ -56,28 +57,18 @@ public class NewsEventConsumer {
             usernames.addAll(participantIds);
         }
 
-        Map<String, UserNameInfo> infos = userExternalService.getUserNameInfos(usernames);
+        Map<String, UserNameInfo> infos = userNameInfoService.getUserNameInfos(usernames);
 
-        Names writer = toNames(writerUsername, infos);
+        Names writer = userNameInfoService.toNames(writerUsername, infos);
 
         List<Names> participants = participantIds == null
                 ? new ArrayList<>()
                 : participantIds.stream()
-                        .map(id -> toNames(id, infos))
+                        .map(id -> userNameInfoService.toNames(id, infos))
                         .toList();
 
         return new Result(writer, participants);
     }
-
-    private Names toNames(String username, Map<String, UserNameInfo> infos) {
-        UserNameInfo info = infos.get(username);
-        if (info == null) {
-            log.warn("User not found: {}", username);
-            return new Names(username, null, null);
-        }
-        return new Names(username, info.nickname(), info.realName());
-    }
-
     private record Result(Names writer, List<Names> participants) {
     }
 }

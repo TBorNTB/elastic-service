@@ -18,4 +18,7 @@ public class Names {
 
     @Field(type = FieldType.Keyword)
     private String realname;
+
+    @Field(type = FieldType.Keyword)
+    private String profileImageUrl;
 }

@@ -6,6 +6,7 @@ import com.sejong.elasticservice.common.constants.GroupNames;
 import com.sejong.elasticservice.common.constants.TopicNames;
 import com.sejong.elasticservice.common.constants.Type;
 import com.sejong.elasticservice.common.embedded.Names;
+import com.sejong.elasticservice.domain.UserNameInfoService;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeEvent;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeIndexEvent;
@@ -24,7 +25,7 @@ import java.util.Map;
 public class CsKnowledgeConsumer {
 
     private final CsKnowledgeRepository repository;
-    private final UserExternalService userExternalService;
+    private final UserNameInfoService userNameInfoService;
 
     @KafkaListener(
             topics = TopicNames.CSKNOWLEDGE,
@@ -44,16 +45,7 @@ public class CsKnowledgeConsumer {
 
     private Names getWriterNames(CsKnowledgeEvent event) {
         String writerUsername = event.getWriterId();
-        Map<String, UserNameInfo> infos = userExternalService.getUserNameInfos(List.of(writerUsername));
-        return toNames(writerUsername, infos);
-    }
-
-    private Names toNames(String username, Map<String, UserNameInfo> infos) {
-        UserNameInfo info = infos.get(username);
-        if (info == null) {
-            log.warn("User not found: {}", username);
-            return new Names(username, null, null);
-        }
-        return new Names(username, info.nickname(), info.realName());
+        Map<String, UserNameInfo> infos = userNameInfoService.getUserNameInfos(List.of(writerUsername));
+        return userNameInfoService.toNames(writerUsername, infos);
     }
 }
