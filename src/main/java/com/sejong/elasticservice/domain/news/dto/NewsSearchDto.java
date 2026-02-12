@@ -31,7 +31,7 @@ public class NewsSearchDto {
         return NewsSearchDto.builder()
                 .id(Long.parseLong(nd.getId()))
                 .content(nd.getContent())
-                .thumbnailPath(nd.getThumbnailPath())
+                .thumbnailPath(nd.getThumbnailKey())
                 .tags(nd.getTags())
                 .createdAt(nd.getCreatedAt())
                 .updatedAt(nd.getUpdatedAt())

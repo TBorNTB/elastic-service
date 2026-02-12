@@ -13,7 +13,7 @@ import java.util.List;
 public class NewsEvent {
     private String id;
     private Content content;
-    private String thumbnailPath;
+    private String thumbnailKey;
     private String writerId;
     private List<String> participantIds;
     private List<String> tags;
