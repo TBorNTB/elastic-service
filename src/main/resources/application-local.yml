@@ -64,6 +64,10 @@ springdoc:
     enabled: true
     path: /swagger-ui.html
 
+elasticsearch:
+  index:
+    recreate: false
+
 logging:
   level:
     org.elasticsearch.client: TRACE

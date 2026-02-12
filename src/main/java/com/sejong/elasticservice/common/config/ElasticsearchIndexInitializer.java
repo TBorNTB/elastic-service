@@ -1,5 +1,4 @@
-java
-    package com.sejong.elasticservice.common.config;
+package com.sejong.elasticservice.common.config;
 
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.document.domain.DocumentDocument;
@@ -41,11 +40,13 @@ public class ElasticsearchIndexInitializer {
     private void initIndex(ElasticsearchOperations ops, Class<?> clazz) {
         IndexOperations indexOps = ops.indexOps(clazz);
 
+        // 인덱스가 없으면 생성만 함 (데이터 삭제 없음)
         if (!indexOps.exists()) {
             indexOps.createWithMapping();
             return;
         }
 
+        // 기본값(false)에서는 절대 삭제하지 않음
         if (recreate) {
             indexOps.delete();
             indexOps.createWithMapping();
