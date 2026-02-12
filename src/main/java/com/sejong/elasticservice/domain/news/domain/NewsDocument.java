@@ -24,7 +24,7 @@ public class NewsDocument {
     private Content content;
 
     @Field(type = FieldType.Keyword)
-    private String thumbnailKey;
+    private String thumbnailUrl;
 
     @Field(type = FieldType.Object)
     private Names writer;
@@ -55,7 +55,7 @@ public class NewsDocument {
         return NewsDocument.builder()
                 .id(newsEvent.getId())
                 .content(newsEvent.getContent())
-                .thumbnailKey(newsEvent.getThumbnailKey())
+                .thumbnailUrl(newsEvent.getThumbnailUrl())
                 .writer(writer)
                 .participants(participants)
                 .tags(newsEvent.getTags())

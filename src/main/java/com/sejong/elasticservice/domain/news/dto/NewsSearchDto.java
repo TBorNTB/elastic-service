@@ -17,7 +17,7 @@ import java.util.List;
 public class NewsSearchDto {
     private Long id;
     private Content content;
-    private String thumbnailPath;
+    private String thumbnailUrl;
     private List<String> tags;
     private String createdAt;
     private String updatedAt;
@@ -31,7 +31,7 @@ public class NewsSearchDto {
         return NewsSearchDto.builder()
                 .id(Long.parseLong(nd.getId()))
                 .content(nd.getContent())
-                .thumbnailPath(nd.getThumbnailKey())
+                .thumbnailUrl(nd.getThumbnailUrl())
                 .tags(nd.getTags())
                 .createdAt(nd.getCreatedAt())
                 .updatedAt(nd.getUpdatedAt())
