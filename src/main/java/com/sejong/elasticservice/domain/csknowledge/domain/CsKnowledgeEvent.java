@@ -15,6 +15,7 @@ public class CsKnowledgeEvent {
     private String content;
     private String writerId;
     private String category;
+    private String thumbnailUrl;
     private String createdAt;
     private long likeCount;
     private long viewCount;

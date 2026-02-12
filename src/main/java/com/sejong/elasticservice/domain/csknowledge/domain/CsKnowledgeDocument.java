@@ -36,6 +36,9 @@ public class CsKnowledgeDocument {
     )
     private String category;
 
+    @Field(type = FieldType.Keyword)
+    private String thumbnailUrl;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     private String createdAt;
@@ -55,6 +58,7 @@ public class CsKnowledgeDocument {
                 .title(csKnowledgeEvent.getTitle())
                 .content(csKnowledgeEvent.getContent())
                 .category(csKnowledgeEvent.getCategory())
+                .thumbnailUrl(csKnowledgeEvent.getThumbnailUrl())
                 .createdAt(csKnowledgeEvent.getCreatedAt())
                 .likeCount(csKnowledgeEvent.getLikeCount())
                 .viewCount(csKnowledgeEvent.getViewCount())
