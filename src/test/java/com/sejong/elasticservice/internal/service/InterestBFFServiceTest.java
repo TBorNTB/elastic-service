@@ -2,8 +2,8 @@ package com.sejong.elasticservice.internal.service;
 
 import com.sejong.elasticservice.common.constants.TechCategory;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
-import com.sejong.elasticservice.domain.internal.dto.ContentResponse;
-import com.sejong.elasticservice.domain.internal.service.InterestContentService;
+import com.sejong.elasticservice.domain.internal_newsletter.dto.ContentResponse;
+import com.sejong.elasticservice.domain.internal_newsletter.service.InterestContentService;
 import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
 import com.sejong.elasticservice.domain.project.domain.ProjectStatus;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("local")
-class InterestContentServiceTest {
+class InterestBFFServiceTest {
 
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;

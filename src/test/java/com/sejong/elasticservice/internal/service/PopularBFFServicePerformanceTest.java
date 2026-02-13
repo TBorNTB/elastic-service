@@ -24,7 +24,7 @@ import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("local")
-class PopularContentServicePerformanceTest {
+class PopularBFFServicePerformanceTest {
 
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostSummaryDto {
+public class    PostSummaryDto {
     private Long postId;
     private PostType postType;
     private String title;

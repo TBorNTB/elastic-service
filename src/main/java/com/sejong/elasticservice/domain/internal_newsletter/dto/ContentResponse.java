@@ -1,4 +1,4 @@
-package com.sejong.elasticservice.domain.internal.dto;
+package com.sejong.elasticservice.domain.internal_newsletter.dto;
 
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.news.domain.NewsDocument;

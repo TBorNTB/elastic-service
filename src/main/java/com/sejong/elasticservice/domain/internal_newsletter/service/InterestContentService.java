@@ -1,9 +1,9 @@
-package com.sejong.elasticservice.domain.internal.service;
+package com.sejong.elasticservice.domain.internal_newsletter.service;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import com.sejong.elasticservice.common.constants.TechCategory;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
-import com.sejong.elasticservice.domain.internal.dto.ContentResponse;
+import com.sejong.elasticservice.domain.internal_newsletter.dto.ContentResponse;
 import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
 import java.util.ArrayList;
 import java.util.List;

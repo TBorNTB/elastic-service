@@ -1,9 +1,9 @@
-package com.sejong.elasticservice.domain.internal.controller;
+package com.sejong.elasticservice.domain.internal_newsletter.controller;
 
 import com.sejong.elasticservice.common.constants.TechCategory;
-import com.sejong.elasticservice.domain.internal.service.InterestContentService;
-import com.sejong.elasticservice.domain.content.service.PopularContentService;
-import com.sejong.elasticservice.domain.internal.dto.ContentResponse;
+import com.sejong.elasticservice.domain.internal_newsletter.service.InterestContentService;
+import com.sejong.elasticservice.domain.internal_newsletter.service.PopularContentService;
+import com.sejong.elasticservice.domain.internal_newsletter.dto.ContentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
