@@ -17,6 +17,7 @@ public class CsKnowledgeSearchDto {
     private String content;
     private String category;
     private String createdAt;
+    private String thumbnailUrl;
     private long likeCount;
     private long viewCount;
     
@@ -28,6 +29,7 @@ public class CsKnowledgeSearchDto {
                 .title(document.getTitle())
                 .content(document.getContent())
                 .category(document.getCategory())
+                .thumbnailUrl(document.getThumbnailUrl())
                 .createdAt(document.getCreatedAt())
                 .likeCount(document.getLikeCount())
                 .viewCount(document.getViewCount())
