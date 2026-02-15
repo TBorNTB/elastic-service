@@ -1,6 +1,6 @@
 package com.sejong.elasticservice.domain.news.dto;
 
-import com.sejong.elasticservice.domain.UserInfo;
+import com.sejong.elasticservice.common.dto.UserInfo;
 import com.sejong.elasticservice.domain.news.domain.Content;
 import com.sejong.elasticservice.domain.news.domain.NewsDocument;
 import lombok.AllArgsConstructor;

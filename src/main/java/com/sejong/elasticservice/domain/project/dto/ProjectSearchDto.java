@@ -1,6 +1,6 @@
 package com.sejong.elasticservice.domain.project.dto;
 
-import com.sejong.elasticservice.domain.UserInfo;
+import com.sejong.elasticservice.common.dto.UserInfo;
 import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
 import com.sejong.elasticservice.domain.project.domain.ProjectStatus;
 import lombok.AllArgsConstructor;

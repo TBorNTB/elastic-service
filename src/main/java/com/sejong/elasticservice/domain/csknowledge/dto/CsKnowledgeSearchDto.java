@@ -1,6 +1,6 @@
 package com.sejong.elasticservice.domain.csknowledge.dto;
 
-import com.sejong.elasticservice.domain.UserInfo;
+import com.sejong.elasticservice.common.dto.UserInfo;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
