@@ -15,6 +15,7 @@ public class CsKnowledgeSearchDto {
     private Long id;
     private String title;
     private String content;
+    private String description;
     private String category;
     private String createdAt;
     private String thumbnailUrl;
@@ -28,6 +29,7 @@ public class CsKnowledgeSearchDto {
                 .id(Long.parseLong(document.getId()))
                 .title(document.getTitle())
                 .content(document.getContent())
+                .description(document.getDescription())
                 .category(document.getCategory())
                 .thumbnailUrl(document.getThumbnailUrl())
                 .createdAt(document.getCreatedAt())
