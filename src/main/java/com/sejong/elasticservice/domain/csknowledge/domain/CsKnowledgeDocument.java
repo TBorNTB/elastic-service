@@ -27,6 +27,9 @@ public class CsKnowledgeDocument {
     @Field(type = FieldType.Text, analyzer = "cs-knowledge_content_analyzer")
     private String content;
 
+    @Field(type = FieldType.Text, analyzer =  "cs-knowledge_description_analyzer")
+    private String description;
+
     @Field(type = FieldType.Object)
     private Names writer;
 
@@ -55,6 +58,7 @@ public class CsKnowledgeDocument {
         return CsKnowledgeDocument.builder()
                 .id(csKnowledgeEvent.getId())
                 .writer(writer)
+                .description(csKnowledgeEvent.getDescription())
                 .title(csKnowledgeEvent.getTitle())
                 .content(csKnowledgeEvent.getContent())
                 .category(csKnowledgeEvent.getCategory())
