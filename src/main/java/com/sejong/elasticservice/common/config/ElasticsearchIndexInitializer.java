@@ -4,6 +4,7 @@ import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.document.domain.DocumentDocument;
 import com.sejong.elasticservice.domain.news.domain.NewsDocument;
 import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
+import com.sejong.elasticservice.domain.rag.domain.RAGDocument;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +36,11 @@ public class ElasticsearchIndexInitializer {
     @Bean
     public ApplicationRunner createDocumentIndex(ElasticsearchOperations ops) {
         return args -> initIndex(ops, DocumentDocument.class);
+    }
+
+    @Bean
+    public ApplicationRunner createRAGIndex(ElasticsearchOperations ops) {
+        return args -> initIndex(ops, RAGDocument.class);
     }
 
     private void initIndex(ElasticsearchOperations ops, Class<?> clazz) {
