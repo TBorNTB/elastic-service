@@ -16,9 +16,9 @@ import org.springframework.data.elasticsearch.annotations.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "spring-ai-document-index")
-@Setting(settingPath = "/elasticsearch/spring-ai-document-settings.json")
-public class SpringAiDocument {
+@Document(indexName = "rag-document-index")
+@Setting(settingPath = "/elasticsearch/rag-document-settings.json")
+public class RAGDocument {
 
     @Id
     private String id;
