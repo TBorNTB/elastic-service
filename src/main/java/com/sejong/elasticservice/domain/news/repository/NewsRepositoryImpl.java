@@ -50,11 +50,15 @@ public class NewsRepositoryImpl implements NewsRepository {
         )._toQuery();
 
         List<Query> filters = new ArrayList<>();
-        // term filter 쿼리 : 카테고리가 정확히 일치하는 것만 필터링
-        if (category != null && !category.trim().isEmpty()) {
-            Query categoryFilter = TermQuery.of(t -> t
-                    .field("content.category.raw")
-                    .value(category)
+        // 카테고리 정확 일치 (MultiField .raw 또는 동적매핑 .keyword 둘 다 시도)
+        String categoryTrimmed = category != null ? category.trim() : null;
+        if (categoryTrimmed != null && !categoryTrimmed.isEmpty()) {
+            Query categoryRaw = TermQuery.of(t -> t.field("content.category.raw").value(categoryTrimmed))._toQuery();
+            Query categoryKeyword = TermQuery.of(t -> t.field("content.category.keyword").value(categoryTrimmed))._toQuery();
+            Query categoryFilter = BoolQuery.of(b -> b
+                    .should(categoryRaw)
+                    .should(categoryKeyword)
+                    .minimumShouldMatch("1")
             )._toQuery();
             filters.add(categoryFilter);
         }
