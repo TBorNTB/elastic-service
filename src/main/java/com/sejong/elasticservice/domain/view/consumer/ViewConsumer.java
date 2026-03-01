@@ -37,7 +37,7 @@ public class ViewConsumer {
         else if (event.getPostType()==PostType.NEWS){
             newsRepository.updateViewCount(event.getPostId(), event.getViewCount());
         }
-        else if (event.getPostType()==PostType.CSKNOWLEDGE){
+        else if (event.getPostType()==PostType.ARTICLE){
             csKnowledgeRepository.updateViewCount(event.getPostId(), event.getViewCount());
         }
     }

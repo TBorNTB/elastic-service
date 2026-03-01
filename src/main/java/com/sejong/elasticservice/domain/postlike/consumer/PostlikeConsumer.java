@@ -37,7 +37,7 @@ public class PostlikeConsumer {
         else if (event.getPostType()==PostType.NEWS){
             newsRepository.updateLikeCount(event.getPostId(), event.getLikeCount());
         }
-        else if (event.getPostType()==PostType.CSKNOWLEDGE){
+        else if (event.getPostType()==PostType.ARTICLE){
             csKnowledgeRepository.updateLikeCount(event.getPostId(), event.getLikeCount());
         }
     }
