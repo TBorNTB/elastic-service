@@ -38,8 +38,7 @@ public class ContentResponse {
     }
 
     public static ContentResponse fromNews(NewsDocument newsItem) {
-        String category = newsItem.getContent() != null && newsItem.getContent().getCategory() != null
-                ? newsItem.getContent().getCategory().name() : null;
+        String category = newsItem.getContent() != null ? newsItem.getContent().getCategory() : null;
         return ContentResponse.builder()
                 .id(newsItem.getId())
                 .title(newsItem.getContent().getTitle())

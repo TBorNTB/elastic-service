@@ -31,5 +31,5 @@ public class Content {
             mainField = @Field(type = FieldType.Text, analyzer = "news_category_analyzer"),
             otherFields = {@InnerField(suffix = "raw", type = FieldType.Keyword)}
     )
-    private NewsCategory category;
+    private String category;
 }

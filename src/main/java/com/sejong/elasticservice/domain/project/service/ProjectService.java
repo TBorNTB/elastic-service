@@ -30,7 +30,6 @@ public class ProjectService {
             int size,
             int page
     ) {
-
         PageResponse<ProjectDocument> result =
                 projectElasticRepository.searchProjects(
                         query,
