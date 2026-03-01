@@ -68,12 +68,15 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
         )._toQuery();
 
         List<Query> filters = new ArrayList<>();
-        // term filter: 카테고리 정확 일치 (저장된 값과 동일한 문자열로 조회, 한글/공백 포함)
+        // 카테고리 정확 일치 (MultiField .raw 또는 동적매핑 .keyword 둘 다 시도)
         String categoryTrimmed = category != null ? category.trim() : null;
         if (categoryTrimmed != null && !categoryTrimmed.isEmpty()) {
-            Query categoryFilter = TermQuery.of(t -> t
-                    .field("category.raw")
-                    .value(categoryTrimmed)
+            Query categoryRaw = TermQuery.of(t -> t.field("category.raw").value(categoryTrimmed))._toQuery();
+            Query categoryKeyword = TermQuery.of(t -> t.field("category.keyword").value(categoryTrimmed))._toQuery();
+            Query categoryFilter = BoolQuery.of(b -> b
+                    .should(categoryRaw)
+                    .should(categoryKeyword)
+                    .minimumShouldMatch("1")
             )._toQuery();
             filters.add(categoryFilter);
         }
