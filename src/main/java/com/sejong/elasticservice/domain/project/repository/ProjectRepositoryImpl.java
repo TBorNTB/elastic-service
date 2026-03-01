@@ -80,25 +80,39 @@ public class ProjectRepositoryImpl implements ProjectRepository {
             filters.add(projectStatusFilter);
         }
 
-        List<FieldValue> categoryValues = categories.stream()
-                .map(FieldValue::of)
+        List<String> categoryList = categories == null ? List.of() : categories;
+        List<String> validCategories = categoryList.stream()
+                .filter(c -> c != null && !c.isBlank())
+                .map(String::trim)
+                .distinct()
                 .toList();
+        if (!validCategories.isEmpty()) {
+            List<FieldValue> categoryValues = validCategories.stream()
+                    .map(FieldValue::of)
+                    .toList();
+            Query projectCategoriesFilter = TermsQuery.of(t -> t
+                    .field("projectCategories")
+                    .terms(v -> v.value(categoryValues))
+            )._toQuery();
+            filters.add(projectCategoriesFilter);
+        }
 
-        Query projectCategoriesFilter = TermsQuery.of(t -> t
-                .field("projectCategories")
-                .terms(v -> v.value(categoryValues))
-        )._toQuery();
-
-        List<FieldValue> techStackValues = techStacks.stream()
-                .map(FieldValue::of)
+        List<String> techStackList = techStacks == null ? List.of() : techStacks;
+        List<String> validTechStacks = techStackList.stream()
+                .filter(t -> t != null && !t.isBlank())
+                .map(String::trim)
+                .distinct()
                 .toList();
-
-        Query projectTechStacksFilter = TermsQuery.of(t -> t
-                .field("projectTechStacks")
-                .terms(v -> v.value(techStackValues))
-        )._toQuery();
-        if (!categories.isEmpty()) filters.add(projectCategoriesFilter);
-        if (!techStacks.isEmpty()) filters.add(projectTechStacksFilter);
+        if (!validTechStacks.isEmpty()) {
+            List<FieldValue> techStackValues = validTechStacks.stream()
+                    .map(FieldValue::of)
+                    .toList();
+            Query projectTechStacksFilter = TermsQuery.of(t -> t
+                    .field("projectTechStacks")
+                    .terms(v -> v.value(techStackValues))
+            )._toQuery();
+            filters.add(projectTechStacksFilter);
+        }
 
         Query boolQuery = BoolQuery.of(b -> b
                 .must(textQuery)
