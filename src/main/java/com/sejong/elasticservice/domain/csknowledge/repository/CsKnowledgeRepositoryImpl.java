@@ -68,11 +68,12 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
         )._toQuery();
 
         List<Query> filters = new ArrayList<>();
-        // term filter 쿼리 : 카테고리가 정확히 일치하는 것만 필터링
-        if (category != null && !category.trim().isEmpty()) {
+        // term filter: 카테고리 정확 일치 (저장된 값과 동일한 문자열로 조회, 한글/공백 포함)
+        String categoryTrimmed = category != null ? category.trim() : null;
+        if (categoryTrimmed != null && !categoryTrimmed.isEmpty()) {
             Query categoryFilter = TermQuery.of(t -> t
                     .field("category.raw")
-                    .value(category)
+                    .value(categoryTrimmed)
             )._toQuery();
             filters.add(categoryFilter);
         }
