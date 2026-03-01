@@ -169,8 +169,13 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
 
     @Override
     public PageResponse<CsKnowledgeDocument> searchByUsername(String username, int size, int page) {
+        String usernameTrimmed = username != null ? username.trim() : "";
+        Query writerUsername = TermQuery.of(t -> t.field("writer.username").value(usernameTrimmed))._toQuery();
+        Query writerUsernameKeyword = TermQuery.of(t -> t.field("writer.username.keyword").value(usernameTrimmed))._toQuery();
         Query boolQuery = BoolQuery.of(b -> b
-                .must(TermQuery.of(t -> t.field("writer.username").value(username))._toQuery())
+                .should(writerUsername)
+                .should(writerUsernameKeyword)
+                .minimumShouldMatch("1")
         )._toQuery();
 
         NativeQuery nativeQuery = NativeQuery.builder()
