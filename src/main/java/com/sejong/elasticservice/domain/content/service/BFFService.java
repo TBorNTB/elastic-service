@@ -31,6 +31,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,6 +50,9 @@ public class BFFService {
 
     public List<PostSummaryDto> getPostsByTypeAndIds(PostRequest request) {
         List<PostRequest.PostItem> posts = request.getPosts();
+        if (posts == null || posts.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         // postType별로 그룹화
         Map<PostType, List<Long>> groupedByType = posts.stream()
@@ -57,7 +61,8 @@ public class BFFService {
                         Collectors.mapping(PostRequest.PostItem::getPostId, Collectors.toList())
                 ));
 
-        List<PostSummaryDto> result = new ArrayList<>();
+        // (postType, postId) -> 찾은 문서만 매핑 (없는 ID는 포함 안 됨)
+        Map<String, PostSummaryDto> foundMap = new HashMap<>();
 
         // PROJECT 처리
         if (groupedByType.containsKey(PostType.PROJECT)) {
@@ -65,17 +70,16 @@ public class BFFService {
                     .map(String::valueOf)
                     .toList();
             Iterable<ProjectDocument> documents = projectRepository.findAllById(projectIds);
-            List<ProjectDocument> documentList = new ArrayList<>();
-            documents.forEach(documentList::add);
-            result.addAll(documentList.stream()
-                    .map(doc -> PostSummaryDto.builder()
-                            .postId(Long.parseLong(doc.getId()))
-                            .postType(PostType.PROJECT)
-                            .title(doc.getTitle())
-                            .createdAt(doc.getCreatedAt())
-                            .writer(UserInfo.from(doc.getOwner()))
-                            .build())
-                    .toList());
+            for (ProjectDocument doc : documents) {
+                String key = PostType.PROJECT.name() + ":" + doc.getId();
+                foundMap.put(key, PostSummaryDto.builder()
+                        .postId(Long.parseLong(doc.getId()))
+                        .postType(PostType.PROJECT)
+                        .title(doc.getTitle())
+                        .createdAt(doc.getCreatedAt())
+                        .writer(UserInfo.from(doc.getOwner()))
+                        .build());
+            }
         }
 
         // NEWS 처리
@@ -84,17 +88,16 @@ public class BFFService {
                     .map(String::valueOf)
                     .toList();
             Iterable<NewsDocument> documents = newsRepository.findAllById(newsIds);
-            List<NewsDocument> documentList = new ArrayList<>();
-            documents.forEach(documentList::add);
-            result.addAll(documentList.stream()
-                    .map(doc -> PostSummaryDto.builder()
-                            .postId(Long.parseLong(doc.getId()))
-                            .postType(PostType.NEWS)
-                            .title(doc.getContent() != null ? doc.getContent().getTitle() : null)
-                            .createdAt(doc.getCreatedAt())
-                            .writer(UserInfo.from(doc.getWriter()))
-                            .build())
-                    .toList());
+            for (NewsDocument doc : documents) {
+                String key = PostType.NEWS.name() + ":" + doc.getId();
+                foundMap.put(key, PostSummaryDto.builder()
+                        .postId(Long.parseLong(doc.getId()))
+                        .postType(PostType.NEWS)
+                        .title(doc.getContent() != null ? doc.getContent().getTitle() : null)
+                        .createdAt(doc.getCreatedAt())
+                        .writer(UserInfo.from(doc.getWriter()))
+                        .build());
+            }
         }
 
         // CSKNOWLEDGE 처리
@@ -103,19 +106,24 @@ public class BFFService {
                     .map(String::valueOf)
                     .toList();
             Iterable<CsKnowledgeDocument> documents = csKnowledgeRepository.findAllById(csIds);
-            List<CsKnowledgeDocument> documentList = new ArrayList<>();
-            documents.forEach(documentList::add);
-            result.addAll(documentList.stream()
-                    .map(doc -> PostSummaryDto.builder()
-                            .postId(Long.parseLong(doc.getId()))
-                            .postType(PostType.ARTICLE)
-                            .title(doc.getTitle())
-                            .createdAt(doc.getCreatedAt())
-                            .writer(UserInfo.from(doc.getWriter()))
-                            .build())
-                    .toList());
+            for (CsKnowledgeDocument doc : documents) {
+                String key = PostType.ARTICLE.name() + ":" + doc.getId();
+                foundMap.put(key, PostSummaryDto.builder()
+                        .postId(Long.parseLong(doc.getId()))
+                        .postType(PostType.ARTICLE)
+                        .title(doc.getTitle())
+                        .createdAt(doc.getCreatedAt())
+                        .writer(UserInfo.from(doc.getWriter()))
+                        .build());
+            }
         }
 
+        // 요청 순서 유지, elastic에 없으면 null
+        List<PostSummaryDto> result = new ArrayList<>();
+        for (PostRequest.PostItem item : posts) {
+            String key = item.getPostType().name() + ":" + item.getPostId();
+            result.add(foundMap.get(key));
+        }
         return result;
     }
 
