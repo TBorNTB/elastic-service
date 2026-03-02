@@ -47,6 +47,14 @@ public class ProjectDocument {
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     private String updatedAt;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
+    private String startedAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
+    private String endedAt;
+
     @Field(type = FieldType.Keyword)
     private String thumbnailUrl;
 
@@ -80,6 +88,8 @@ public class ProjectDocument {
                 .projectStatus(pe.getProjectStatus())
                 .createdAt(pe.getCreatedAt())
                 .updatedAt(pe.getUpdatedAt())
+                .startedAt(pe.getStartedAt())
+                .endedAt(pe.getEndedAt())
                 .projectCategories(pe.getProjectCategories())
                 .projectTechStacks(pe.getProjectTechStacks())
                 .owner(owner)

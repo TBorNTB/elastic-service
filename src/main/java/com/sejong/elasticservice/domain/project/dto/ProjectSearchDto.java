@@ -24,6 +24,8 @@ public class ProjectSearchDto {
     private List<String> projectTechStacks;
     private String createdAt;
     private String updatedAt;
+    private String startedAt;
+    private String endedAt;
     private long likeCount;
     private long viewCount;
     
@@ -41,6 +43,8 @@ public class ProjectSearchDto {
                 .projectTechStacks(document.getProjectTechStacks())
                 .createdAt(document.getCreatedAt())
                 .updatedAt(document.getUpdatedAt())
+                .startedAt(document.getStartedAt())
+                .endedAt(document.getEndedAt())
                 .likeCount(document.getLikeCount())
                 .viewCount(document.getViewCount())
                 .owner(UserInfo.from(document.getOwner()))

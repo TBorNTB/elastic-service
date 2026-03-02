@@ -120,7 +120,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         )._toQuery();
 
         Sort sort = switch (postSortType) {
-            case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
+            case LATEST -> Sort.by(Sort.Direction.DESC, "updatedAt");
             case POPULAR -> Sort.by(Sort.Direction.DESC, "likeCount");
         };
 
@@ -151,7 +151,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     @Override
     public List<ProjectDocument> searchProjects(int size, int page) {
         NativeQuery nativeQuery = NativeQuery.builder()
-                .withSort(Sort.by(Sort.Order.desc("createdAt")))
+                .withSort(Sort.by(Sort.Order.desc("updatedAt")))
                 .withPageable(PageRequest.of(page, size))
                 .build();
 
@@ -202,7 +202,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
-                .withSort(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .withSort(Sort.by(Sort.Direction.DESC, "updatedAt"))
                 .withPageable(PageRequest.of(page, size))
                 .build();
 
@@ -236,7 +236,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
-                .withSort(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .withSort(Sort.by(Sort.Direction.DESC, "updatedAt"))
                 .withPageable(PageRequest.of(page, size))
                 .build();
 

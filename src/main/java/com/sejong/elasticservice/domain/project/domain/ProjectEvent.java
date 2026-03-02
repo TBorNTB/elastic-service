@@ -21,6 +21,8 @@ public class ProjectEvent {
 
     private ProjectStatus projectStatus;
 
+    private String startedAt;
+    private String endedAt;
     private String createdAt;
     private String updatedAt;
 
