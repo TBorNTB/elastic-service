@@ -76,6 +76,7 @@ public class BFFService {
                         .postId(Long.parseLong(doc.getId()))
                         .postType(PostType.PROJECT)
                         .title(doc.getTitle())
+                        .thumbnailUrl(doc.getThumbnailUrl())
                         .createdAt(doc.getCreatedAt())
                         .writer(UserInfo.from(doc.getOwner()))
                         .build());
@@ -94,6 +95,7 @@ public class BFFService {
                         .postId(Long.parseLong(doc.getId()))
                         .postType(PostType.NEWS)
                         .title(doc.getContent() != null ? doc.getContent().getTitle() : null)
+                        .thumbnailUrl(doc.getThumbnailUrl())
                         .createdAt(doc.getCreatedAt())
                         .writer(UserInfo.from(doc.getWriter()))
                         .build());
@@ -112,6 +114,7 @@ public class BFFService {
                         .postId(Long.parseLong(doc.getId()))
                         .postType(PostType.ARTICLE)
                         .title(doc.getTitle())
+                        .thumbnailUrl(doc.getThumbnailUrl())
                         .createdAt(doc.getCreatedAt())
                         .writer(UserInfo.from(doc.getWriter()))
                         .build());
