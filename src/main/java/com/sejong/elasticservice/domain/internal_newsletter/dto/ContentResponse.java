@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class ContentResponse {
     private String id;
     private String contentType; // PROJECT, NEWS, CS-KNOWLEDGE
-
+    private String thumbnailUrl;
     private String title;
     private String content;
     private String category; // 카테고리 정보
@@ -29,6 +29,7 @@ public class ContentResponse {
                 .id(project.getId())
                 .title(project.getTitle())
                 .content(project.getDescription())
+                .thumbnailUrl(project.getThumbnailUrl())
                 .contentType("PROJECT")
                 .category(String.join(", ", project.getProjectCategories()))
                 .createdAt(project.getCreatedAt())
@@ -42,6 +43,7 @@ public class ContentResponse {
         return ContentResponse.builder()
                 .id(newsItem.getId())
                 .title(newsItem.getContent().getTitle())
+                .thumbnailUrl(newsItem.getThumbnailUrl())
                 .content(newsItem.getContent().getSummary())
                 .contentType("NEWS")
                 .category(category)
@@ -55,6 +57,7 @@ public class ContentResponse {
         return ContentResponse.builder()
                 .id(cs.getId())
                 .title(cs.getTitle())
+                .thumbnailUrl(cs.getThumbnailUrl())
                 .content(cs.getContent())
                 .contentType("CS-KNOWLEDGE")
                 .category(cs.getCategory())
