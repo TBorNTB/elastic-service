@@ -195,12 +195,18 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     @Override
     public PageResponse<NewsDocument> searchByMemberName(String name, int size, int page) {
+        // case_insensitive: 닉네임/실명이 소문자 등으로 저장돼 있어도 검색되도록 (예: PlusUltraCode vs plusultracode)
+        // .keyword: 동적 매핑으로 text+keyword 서브필드만 있는 인덱스 대비
         Query boolQuery = BoolQuery.of(b -> b
                 .should(
-                        TermQuery.of(t -> t.field("writer.nickname").value(name))._toQuery(),
-                        TermQuery.of(t -> t.field("writer.realname").value(name))._toQuery(),
-                        TermQuery.of(t -> t.field("participants.nickname").value(name))._toQuery(),
-                        TermQuery.of(t -> t.field("participants.realname").value(name))._toQuery()
+                        TermQuery.of(t -> t.field("writer.nickname").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("writer.nickname.keyword").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("writer.realname").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("writer.realname.keyword").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("participants.nickname").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("participants.nickname.keyword").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("participants.realname").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("participants.realname.keyword").value(name).caseInsensitive(true))._toQuery()
                 )
                 .minimumShouldMatch("1")
         )._toQuery();

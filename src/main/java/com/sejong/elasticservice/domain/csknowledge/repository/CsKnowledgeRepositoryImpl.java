@@ -138,10 +138,14 @@ public class CsKnowledgeRepositoryImpl implements CsKnowledgeRepository {
 
     @Override
     public PageResponse<CsKnowledgeDocument> searchByMemberName(String name, int size, int page) {
+        // case_insensitive: 닉네임/실명 대소문자 무관 검색 (예: PlusUltraCode vs plusultracode)
+        // .keyword: 동적 매핑으로 text+keyword 서브필드만 있는 인덱스 대비
         Query boolQuery = BoolQuery.of(b -> b
                 .should(
-                        TermQuery.of(t -> t.field("writer.nickname").value(name))._toQuery(),
-                        TermQuery.of(t -> t.field("writer.realname").value(name))._toQuery()
+                        TermQuery.of(t -> t.field("writer.nickname").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("writer.nickname.keyword").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("writer.realname").value(name).caseInsensitive(true))._toQuery(),
+                        TermQuery.of(t -> t.field("writer.realname.keyword").value(name).caseInsensitive(true))._toQuery()
                 )
                 .minimumShouldMatch("1")
         )._toQuery();
