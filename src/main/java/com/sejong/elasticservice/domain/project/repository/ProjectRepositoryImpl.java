@@ -73,9 +73,22 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
         List<Query> filters = new ArrayList<>();
         if (projectStatus != null) {
-            Query projectStatusFilter = TermQuery.of(t -> t
+            String statusValue = projectStatus.name();
+            // 인덱스가 Keyword 필드이거나 동적 매핑으로 text+keyword인 경우 모두 매칭되도록 둘 다 쿼리
+            Query termMain = TermQuery.of(t -> t
                     .field("projectStatus")
-                    .value(projectStatus.name())
+                    .value(statusValue)
+                    .caseInsensitive(true)
+            )._toQuery();
+            Query termKeyword = TermQuery.of(t -> t
+                    .field("projectStatus.keyword")
+                    .value(statusValue)
+                    .caseInsensitive(true)
+            )._toQuery();
+            Query projectStatusFilter = BoolQuery.of(b -> b
+                    .should(termMain)
+                    .should(termKeyword)
+                    .minimumShouldMatch("1")
             )._toQuery();
             filters.add(projectStatusFilter);
         }
