@@ -1,11 +1,11 @@
 package com.sejong.elasticservice.common.constants;
 
 public enum TechCategory {
-    SYSTEM_HACKING,
-    WEB_HACKING,
-    DIGITAL_FORENSICS,
-    REVERSING,
-    CRYPTOGRAPHY,
-    NETWORK_SECURITY,
-    IOT_SECURITY
+    시스템_해킹,
+    웹_해킹,
+    디지털_포렌식,
+    리버싱,
+    암호학,
+    네트워크_보안,
+    IOT_보안
 }
