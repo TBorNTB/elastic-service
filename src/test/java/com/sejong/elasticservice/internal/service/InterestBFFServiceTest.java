@@ -1,6 +1,5 @@
 package com.sejong.elasticservice.internal.service;
 
-import com.sejong.elasticservice.common.constants.TechCategory;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.internal_newsletter.dto.ContentResponse;
 import com.sejong.elasticservice.domain.internal_newsletter.service.InterestContentService;
@@ -74,7 +73,7 @@ class InterestBFFServiceTest {
 
         // SYSTEM_HACKING 카테고리의 랜덤 컨텐츠 조회
         List<ContentResponse> results = interestContentService.getRandomContentsOf(
-                List.of(TechCategory.시스템_해킹)
+                List.of("시스템_해킹")
         );
 
         // 검증
@@ -116,7 +115,7 @@ class InterestBFFServiceTest {
 
         // 3개 카테고리의 랜덤 컨텐츠 조회
         List<ContentResponse> results = interestContentService.getRandomContentsOf(
-                List.of(TechCategory.시스템_해킹, TechCategory.웹_해킹, TechCategory.암호학)
+                List.of("시스템_해킹", "웹_해킹", "암호학")
         );
 
         // 검증
@@ -151,7 +150,7 @@ class InterestBFFServiceTest {
 
         // NETWORK_SECURITY 카테고리의 랜덤 컨텐츠 조회
         List<ContentResponse> results = interestContentService.getRandomContentsOf(
-                List.of(TechCategory.네트워크_보안)
+                List.of("네트워크_보안")
         );
 
         // 검증: CsKnowledge가 없어도 Project에서 선택되어야 함
@@ -179,7 +178,7 @@ class InterestBFFServiceTest {
 
         // REVERSING 카테고리의 랜덤 컨텐츠 조회
         List<ContentResponse> results = interestContentService.getRandomContentsOf(
-                List.of(TechCategory.리버싱)
+                List.of("리버싱")
         );
 
         // 검증: Project가 없어도 CsKnowledge에서 선택되어야 함
@@ -196,7 +195,7 @@ class InterestBFFServiceTest {
 
         // IOT_SECURITY 카테고리의 랜덤 컨텐츠 조회 (데이터 없음)
         List<ContentResponse> results = interestContentService.getRandomContentsOf(
-                List.of(TechCategory.IOT_보안)
+                List.of("IOT_보안")
         );
 
         // 검증: 데이터가 없으면 빈 리스트 반환
@@ -231,7 +230,7 @@ class InterestBFFServiceTest {
         // 여러 번 호출하여 랜덤성 확인
         for (int i = 0; i < 5; i++) {
             List<ContentResponse> results = interestContentService.getRandomContentsOf(
-                    List.of(TechCategory.디지털_포렌식)
+                    List.of("디지털_포렌식")
             );
 
             Assertions.assertNotNull(results);
@@ -263,7 +262,7 @@ class InterestBFFServiceTest {
 
         // SYSTEM_HACKING과 WEB_HACKING 카테고리 조회
         List<ContentResponse> results = interestContentService.getRandomContentsOf(
-                List.of(TechCategory.시스템_해킹, TechCategory.웹_해킹)
+                List.of("시스템_해킹", "웹_해킹")
         );
 
         // 검증: 2개 카테고리에 대해 결과가 반환되어야 함

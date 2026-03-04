@@ -1,6 +1,5 @@
 package com.sejong.elasticservice.domain.internal_newsletter.controller;
 
-import com.sejong.elasticservice.common.constants.TechCategory;
 import com.sejong.elasticservice.domain.internal_newsletter.service.InterestContentService;
 import com.sejong.elasticservice.domain.internal_newsletter.service.PopularContentService;
 import com.sejong.elasticservice.domain.internal_newsletter.dto.ContentResponse;
@@ -32,7 +31,7 @@ public class InternalController {
 
     @GetMapping("/interest-contents")
     @Operation(summary = "뉴스레터 구독자의 관심사 컨텐츠 조회")
-    public ResponseEntity<List<ContentResponse>> getInterestingContent(List<TechCategory> categories) {
+    public ResponseEntity<List<ContentResponse>> getInterestingContent(List<String> categories) {
         List<ContentResponse> contents = interestContentService.getRandomContentsOf(categories);
         return ResponseEntity.ok(contents);
     }

@@ -1,7 +1,6 @@
 package com.sejong.elasticservice.domain.internal_newsletter.service;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import com.sejong.elasticservice.common.constants.TechCategory;
 import com.sejong.elasticservice.domain.csknowledge.domain.CsKnowledgeDocument;
 import com.sejong.elasticservice.domain.internal_newsletter.dto.ContentResponse;
 import com.sejong.elasticservice.domain.project.domain.ProjectDocument;
@@ -24,10 +23,10 @@ public class InterestContentService {
     private final ElasticsearchOperations elasticsearchOperations;
     private final Random random = new Random();
 
-    public List<ContentResponse> getRandomContentsOf(List<TechCategory> categories) {
+    public List<ContentResponse> getRandomContentsOf(List<String> categories) {
         List<ContentResponse> results = new ArrayList<>();
 
-        for (TechCategory category : categories) {
+        for (String category : categories) {
             // 각 카테고리별로 Project와 CsKnowledge 중 랜덤하게 하나 선택
             boolean searchProject = random.nextBoolean();
 
@@ -59,10 +58,8 @@ public class InterestContentService {
         return results;
     }
 
-    private ContentResponse getRandomProjectByCategory(TechCategory category) {
+    private ContentResponse getRandomProjectByCategory(String categoryName) {
         try {
-            String categoryName = category.name();
-
             // 랜덤 시드 생성 (매 요청마다 다른 결과)
             long seed = System.currentTimeMillis() + random.nextLong();
 
@@ -102,15 +99,13 @@ public class InterestContentService {
 
             return ContentResponse.fromProject(randomProject);
         } catch (Exception e) {
-            log.error("Error getting random project for category: {}", category, e);
+            log.error("Error getting random project for category: {}", categoryName, e);
             return null;
         }
     }
 
-    private ContentResponse getRandomCsKnowledgeByCategory(TechCategory category) {
+    private ContentResponse getRandomCsKnowledgeByCategory(String categoryName) {
         try {
-            String categoryName = category.name();
-
             // 랜덤 시드 생성 (매 요청마다 다른 결과)
             long seed = System.currentTimeMillis() + random.nextLong();
 
@@ -150,7 +145,7 @@ public class InterestContentService {
 
             return ContentResponse.fromCsKnowledge(randomCs);
         } catch (Exception e) {
-            log.error("Error getting random CS knowledge for category: {}", category, e);
+            log.error("Error getting random CS knowledge for category: {}", categoryName, e);
             return null;
         }
     }
