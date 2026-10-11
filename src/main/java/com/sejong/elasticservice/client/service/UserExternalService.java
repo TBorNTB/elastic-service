@@ -3,10 +3,13 @@ package com.sejong.elasticservice.client.service;
 import static com.sejong.elasticservice.common.exception.ExceptionType.EXTERNAL_SERVICE_ERROR;
 
 import com.sejong.elasticservice.client.UserClient;
+import com.sejong.elasticservice.client.response.CommentCountResponse;
 import com.sejong.elasticservice.client.response.UserNameInfo;
 import com.sejong.elasticservice.common.exception.BaseException;
+import com.sejong.elasticservice.domain.postlike.domain.PostType;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +39,20 @@ public class UserExternalService {
         }
 
         throw new BaseException(EXTERNAL_SERVICE_ERROR);
+    }
+
+    public Map<Long, Long> getCommentCounts(PostType postType, List<Long> postIds) {
+        try {
+            ResponseEntity<List<CommentCountResponse>> response = userClient.getCommentCounts(postType, postIds);
+            if (response.getBody() == null) {
+                throw new BaseException(EXTERNAL_SERVICE_ERROR);
+            }
+
+            return response.getBody().stream()
+                    .collect(Collectors.toMap(CommentCountResponse::postId, CommentCountResponse::count));
+        } catch (RuntimeException e) {
+            log.warn("댓글 수 조회에 실패했습니다. 댓글 수를 0으로 표시합니다.", e);
+            return Map.of();
+        }
     }
 }

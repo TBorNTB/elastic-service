@@ -21,10 +21,15 @@ public class CsKnowledgeSearchDto {
     private String thumbnailUrl;
     private long likeCount;
     private long viewCount;
+    private long commentCount;
     
     private UserInfo writer;
 
     public static CsKnowledgeSearchDto toCsKnowledgeSearchDto(CsKnowledgeDocument document) {
+        return toCsKnowledgeSearchDto(document, 0L);
+    }
+
+    public static CsKnowledgeSearchDto toCsKnowledgeSearchDto(CsKnowledgeDocument document, long commentCount) {
         return CsKnowledgeSearchDto.builder()
                 .id(Long.parseLong(document.getId()))
                 .title(document.getTitle())
@@ -35,6 +40,7 @@ public class CsKnowledgeSearchDto {
                 .createdAt(document.getCreatedAt())
                 .likeCount(document.getLikeCount())
                 .viewCount(document.getViewCount())
+                .commentCount(commentCount)
                 .writer(UserInfo.from(document.getWriter()))
                 .build();
     }

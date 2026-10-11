@@ -1,6 +1,8 @@
 package com.sejong.elasticservice.client;
 
 import com.sejong.elasticservice.client.response.UserNameInfo;
+import com.sejong.elasticservice.client.response.CommentCountResponse;
+import com.sejong.elasticservice.domain.postlike.domain.PostType;
 import java.util.List;
 import java.util.Map;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -13,4 +15,9 @@ public interface
 UserClient {
     @GetMapping("/un-info")
     ResponseEntity<Map<String, UserNameInfo>> getUserNameInfos(@RequestParam("usernames") List<String> usernames);
+
+    @GetMapping("/comments/counts")
+    ResponseEntity<List<CommentCountResponse>> getCommentCounts(
+            @RequestParam("postType") PostType postType,
+            @RequestParam("postIds") List<Long> postIds);
 }
